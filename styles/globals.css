@@ -2,15 +2,108 @@ html,
 body {
   padding: 0;
   margin: 0;
+
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
+.logoStyles {
+  width: 80px;
+  height: 80px;
+  text-justify: center;
+}
 
-a {
-  color: inherit;
+.lPLogoStyles {
+  height: 200px;
+  width: 200px;
+  justify-content: center;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+h2 {
+  text-align: center;
+  margin-top: 100px;
+}
+/* .headerFlexStyles {
+  display: flex;
+  text-align: center;
+  background-color: #25526e;
+  color: #f9f1f1;
+} */
+.headerStyles {
+  text-justify: center;
+  background-color: #25526e;
+  color: #f9f1f1;
+  padding: 40px;
+}
+
+.formStyles {
+  text-align: center;
+  color: #1f1d1d;
+}
+input {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  border: 2px soldid #1f1d1d;
+  border-radius: 4px;
+}
+
+.buttonStyles {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  background-color: #1f1d1d;
+  color: #f9f1f1;
+  border: 2px soldid #1f1d1d;
+  border-radius: 4px;
+}
+
+.landingPageButtonStyles {
+  width: 35%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  background-color: #1f1d1d;
+  color: #f9f1f1;
+  margin: 20px;
+  border: 2px soldid #1f1d1d;
+  border-radius: 4px;
+}
+
+.profilePicContainer {
+  margin-top: 40px;
+  border-radius: 5px;
+  height: 150px;
+  width: 300px;
+  font-family: Roboto, sans-serif;
+  align-content: center;
+  justify-content: space-around;
+}
+
+.pic {
+  border-radius: 50%;
+  background-color: #cccccc;
+  width: 2.5em;
+  height: 2.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #ffffff;
+  box-shadow: 0px 0px 6px rgba(20, 20, 20, 0.6);
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+.name {
+  color: #222222;
+}
+
+.placeholderStyles {
+  align-content: center;
 }
