@@ -16,59 +16,89 @@ export default function Register(props: { token: string }) {
         <Head>
           <title>Register</title>
         </Head>
-        <Layout>
-          <h2>Register</h2>
-          <form
-            className="formStyles"
-            onSubmit={async (e) => {
-              // Prevent the default browser behavior of forms
-              e.preventDefault();
 
-              // Send the username, password and token to the
-              // API route
-              const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: username,
-                  password: password,
-                  token: props.token,
-                }),
-              });
-            }}
-          >
-            <div className="registerContainer">
-              <label htmlFor="username">
-                <p>Username</p>
-              </label>
-              <input
-                value={username}
-                onChange={(e) => setUsername(e.currentTarget.value)}
-                type="text"
-                placeholder="Enter Username"
-                name="username"
-                required
+        <h2>Register</h2>
+        <Link href="/">
+          <a>
+            <div className="LogoCenterStyles">
+              <img
+                className="lPLogoStyles"
+                src="/hobbyMarketPlaceLogo.svg"
+                alt="Logo"
               />
-              <label htmlFor="passwordw">
-                <p>Password</p>
-              </label>
-              <input
-                value={password}
-                onChange={(e) => setPassword(e.currentTarget.value)}
-                type="password"
-                placeholder="Enter Password"
-                name="psasword"
-                required
-              />
-              <br />
-              <button className="buttonStyles" type="submit">
-                Register
-              </button>
             </div>
-          </form>
-        </Layout>
+          </a>
+        </Link>
+        <form
+          className="formStyles"
+          onSubmit={async (e) => {
+            // Prevent the default browser behavior of forms
+            e.preventDefault();
+
+            // Send the username, password and token to the
+            // API route
+            const response = await fetch('/api/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                username: username,
+                password: password,
+                token: props.token,
+              }),
+            });
+            const { success } = await response.json();
+
+            if (success) {
+              // Redirect to the homepage if successfully registered
+              router.push('/profile');
+            } else {
+              // If the response status code (set using response.status()
+              // in the API route) is 409 (Conflict) then show an error
+              // message that the user already exists
+              if (response.status === 409) {
+                setErrorMessage('User already exists!');
+              } else {
+                setErrorMessage('Failed!');
+              }
+            }
+          }}
+        >
+          <div className="registerContainer">
+            <label htmlFor="username">
+              <p>Username</p>
+            </label>
+            <input
+              value={username}
+              onChange={(e) => setUsername(e.currentTarget.value)}
+              type="text"
+              placeholder="Enter Username"
+              name="username"
+              required
+            />
+            <label htmlFor="passwordw">
+              <p>Password</p>
+            </label>
+            <input
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+              type="password"
+              placeholder="Enter Password"
+              name="psasword"
+              required
+            />
+            <br />
+            <button className="buttonStyles" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
+        <p style={{ color: 'red' }}>{errorMessage}</p>
+
+        {/* <Link href="/login">
+            <a>Login</a>
+          </Link> */}
       </div>
     </>
   );

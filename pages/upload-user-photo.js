@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import Link from 'next/link';
+import ProfilePicUpLoader from '../components/ProfilePicUpLoader';
 
 export default function Products() {
   return (
@@ -11,7 +12,7 @@ export default function Products() {
       <Layout>
         <form className="formStyles">
           <div className="createProfileContainer">
-            <Link
+            {/* <Link
               className="placeholderStyles"
               href="//fonts.googleapis.com/css?family=Roboto:500,300,700,400italic,400"
             >
@@ -22,25 +23,35 @@ export default function Products() {
                   <div class="name"> Username </div>
                 </div>
               </a>
-            </Link>
+            </Link> */}
+            <ProfilePicUpLoader />
 
-            <label for="date of Birth">
-              <p>Date of Birth</p>
+            <label htmlFor="first name">
+              <p>First name</p>
             </label>
             <input
               type="text"
-              placeholder="DD/MM/YYYY"
-              name="date of Birth"
+              placeholder="Enter first name"
+              name="first name"
               required
             />
-            <label for="City">
-              <p>City</p>
+            <label htmlFor="last name">
+              <p>Last name</p>
             </label>
-            <input type="text" placeholder="Enter City" name="city" required />
+            <input
+              type="text"
+              placeholder="Enter last name"
+              name="last name"
+              required
+            />
             <br />
+            {/* <Link href="/profile">
+              <a> */}
             <button className="buttonStyles" type="submit">
-              Create Profile
+              Add to Profile
             </button>
+            {/* </a>
+            </Link> */}
           </div>
         </form>
       </Layout>

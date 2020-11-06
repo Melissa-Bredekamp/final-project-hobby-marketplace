@@ -24,10 +24,10 @@
   },
   "include": [
     "next-env.d.ts",
+    "postgres.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.js",
-    "migrations/1603222464-insert-albums-values.js"
+    "**/*.js"
   ],
   "exclude": ["node_modules"]
 }
