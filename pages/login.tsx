@@ -101,7 +101,7 @@ export default function Login(props: Props) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { session: token } = nextCookies(context);
 
-  const redirectDestination = context?.query?.returnTo ?? '/profile';
+  const redirectDestination = '/users/create-users';
 
   if (await isSessionTokenValid(token)) {
     return {

@@ -1,8 +1,8 @@
 import { Fragment, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import Layout from '../components/Layout';
-import { User } from '../utilities/types';
+import Layout from '../../components/Layout';
+import { User } from '../../utilities/types';
 import { useRouter } from 'next/router';
 
 type Props = {
@@ -98,6 +98,7 @@ export default function SingleUser(props: Props) {
       )}{' '}
       {editingKey !== 'lastName' ? (
         <button
+          className="buttonStyles"
           onClick={() => {
             setEditingKey('lastName');
           }}
@@ -184,6 +185,7 @@ export default function SingleUser(props: Props) {
       )}{' '}
       {editingKey !== 'dateOfBirth' ? (
         <button
+          className="buttonStyles"
           onClick={() => {
             setEditingKey('dateOfBirth');
           }}
@@ -193,6 +195,7 @@ export default function SingleUser(props: Props) {
       ) : (
         <>
           <button
+            className="buttonStyles"
             onClick={async () => {
               await fetch(`/api/users/${props.user.id}`, {
                 method: 'PATCH',
@@ -207,6 +210,7 @@ export default function SingleUser(props: Props) {
             save
           </button>{' '}
           <button
+            className="buttonStyles"
             onClick={() => {
               setEditingKey(null);
               setDateOfBirth(props.user.dateOfBirth);
@@ -228,6 +232,7 @@ export default function SingleUser(props: Props) {
       )}{' '}
       {editingKey !== 'city' ? (
         <button
+          className="buttonStyles"
           onClick={() => {
             setEditingKey('city');
           }}
@@ -237,6 +242,7 @@ export default function SingleUser(props: Props) {
       ) : (
         <>
           <button
+            className="buttonStyles"
             onClick={async () => {
               await fetch(`/api/users/${props.user.id}`, {
                 method: 'PATCH',
@@ -251,6 +257,7 @@ export default function SingleUser(props: Props) {
             save
           </button>{' '}
           <button
+            className="buttonStyles"
             onClick={() => {
               setEditingKey(null);
               setCity(props.user.city);
@@ -375,11 +382,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id as string;
 
   // import { users } from '../utilities/database';
-  const { getUserById } = await import('../utilities/database');
+  const { getUserById, userToReactProps } = await import(
+    '../../utilities/database'
+  );
   const user = await getUserById(id);
+  const reactUser = userToReactProps(user);
 
   const props: { user?: User } = {};
-  if (user) props.user = user;
+  if (user) props.user = reactUser;
 
   return {
     props: props,

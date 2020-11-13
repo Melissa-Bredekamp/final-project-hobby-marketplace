@@ -6,9 +6,17 @@ export type User = {
   lastName: string;
   dateOfBirth: Date;
   city: string;
-  interests: string;
+  interests: string[];
   photo: string;
   email: string;
+};
+
+export type Hobby = {
+  hobbyId: number;
+  hobbyOffer: string;
+  city: string;
+  availability: string[];
+  aboutMe: string;
 };
 
 export type Session = {

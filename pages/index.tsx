@@ -14,8 +14,9 @@ export default function LandingPage(props: Props) {
       <Head>
         <title>Landing page</title>
       </Head>
-      <Layout loggedIn={props.loggedIn}>
-        <div>
+
+      <div loggedIn={props.loggedIn}>
+        <div className="LandingPageStyles">
           <div className="LogoCenterStyles">
             <Link href="/">
               <a>
@@ -49,7 +50,7 @@ export default function LandingPage(props: Props) {
           </div>
           {/* <button className="landingPageButtonStyles">Log out</button> */}
         </div>
-      </Layout>
+      </div>
     </div>
   );
 }

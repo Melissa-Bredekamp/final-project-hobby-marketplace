@@ -1,17 +1,28 @@
+import { useState } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import Link from 'next/link';
-import ProfilePicUpLoader from '../components/ProfilePicUpLoader';
 
-export default function Products() {
+export default function upload() {
+  const [photo, setPhoto] = useState();
+
+  const handleChange = (event) => {
+    setPhoto(event.target.files[0]);
+  };
+
   return (
     <div>
       <Head>
-        <title>Create Profile</title>
+        <title>Upload Profile Pic</title>
       </Head>
       <Layout>
         <form className="formStyles">
           <div className="createProfileContainer">
+            <input className="uploaderStyles"
+              onChange={handleChange}
+              accept=".png, .jpeg, .jpg"
+              type="file"
+            ></input>
             {/* <Link
               className="placeholderStyles"
               href="//fonts.googleapis.com/css?family=Roboto:500,300,700,400italic,400"
@@ -24,7 +35,7 @@ export default function Products() {
                 </div>
               </a>
             </Link> */}
-            <ProfilePicUpLoader />
+            {/* <ProfilePicUpLoader /> */}
 
             <label htmlFor="first name">
               <p>First name</p>
@@ -47,9 +58,26 @@ export default function Products() {
             <br />
             {/* <Link href="/profile">
               <a> */}
-            <button className="buttonStyles" type="submit">
-              Add to Profile
-            </button>
+            <div>
+              <button
+                className="buttonStyles"
+                type="submit"
+                disable={!photo}
+                onClick={async () => {
+                  await fetch(`/api/users/${props.user.id}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      user: { photo: photo },
+                    }),
+                  });
+                }}
+              >
+                Add to Profile
+              </button>
+            </div>
             {/* </a>
             </Link> */}
           </div>

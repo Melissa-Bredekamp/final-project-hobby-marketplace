@@ -26,6 +26,10 @@ body {
   display: grid;
 }
 
+.LandingPageStyles {
+  margin-top: 160px;
+}
+
 .pageStyles {
   margin-top: 160px;
   justify-content: center;
@@ -78,6 +82,7 @@ h4 {
 }
 
 .formStyles {
+  margin-top: 40px;
   text-align: center;
   color: #1f1d1d;
 }
@@ -244,6 +249,10 @@ input {
   background-color: #fad3d3;
   color: black;
   margin-top: 100px;
+}
+
+.uploaderStyles {
+  border-radius: 50%;
 }
 
 /* body {

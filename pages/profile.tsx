@@ -11,7 +11,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [firstName, setFirstName] = useState(props.user?.firstName);
   const [lastName, setLastName] = useState(props.user?.lastName);
-  const [email, setEmail] = useState(props.user?.lastName);
+  const [email, setEmail] = useState(props.user?.email);
   const [dateOfBirth, setDateOfBirth] = useState(props.user?.dateOfBirth);
   const [city, setCity] = useState(props.user?.city);
   const [photo, setPhoto] = useState(props.user?.photo);
@@ -109,7 +109,16 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
               <>
                 <button
                   className="buttonStyles"
-                  onClick={() => {
+                  onClick={async () => {
+                    await fetch(`/api/users/${props.user.id}`, {
+                      method: 'PATCH',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        user: { lastName: lastName },
+                      }),
+                    });
                     setEditingKey(null);
                   }}
                 >
