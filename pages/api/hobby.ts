@@ -18,9 +18,10 @@ export default async function hobbyHandler(
   if (request.method === 'GET') {
     hobby = await getHobby();
   } else if (request.method === 'POST') {
-    // const {
-    //   newHobby: { hobbyOffer, availability, city, aboutMe },
-    // } = request.body;
+    if (!request.headers.cookie) {
+      // TODO: Return proper message from the server
+      return response.status(401).send({ success: false });
+    }
     const newHobby = request.body;
     const cookiesParsed = cookie.parse(request.headers.cookie);
     const sessionToken = cookiesParsed.session;
