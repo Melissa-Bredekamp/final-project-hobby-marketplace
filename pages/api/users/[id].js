@@ -13,11 +13,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse,
-) {
-  const userId = request.query.id as string;
+export default async function handler(request, response) {
+  const userId = request.query.id;
 
   if (!/^\d+$/.test(userId)) {
     response.statusCode = 404;
@@ -25,7 +22,7 @@ export default async function handler(
     return response.end(JSON.stringify({ errors: 'Not found' }));
   }
 
-  let user: User | undefined | {} = {};
+  let user = {};
 
   if (request.method === 'GET') {
     user = await getUserById(userId);
