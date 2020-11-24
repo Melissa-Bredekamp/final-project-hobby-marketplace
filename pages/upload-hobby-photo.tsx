@@ -3,11 +3,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../components/Layout';
-import ImgixClient from 'imgix-core-js';
 import nextCookies from 'next-cookies';
 import { User } from '../utilities/types';
 import { isSessionTokenValid } from '../utilities/auth';
-import { getUserBySessionToken, userToReactProps } from '../utilities/database';
+
 
 type Props = {
   user: User;
@@ -105,6 +104,7 @@ export default function upload(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { getUserBySessionToken, userToReactProps } = await import ('../utilities/database');
   const { session: token } = nextCookies(context);
 
   const redirectDestination = '/additional-user-info';

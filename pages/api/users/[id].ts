@@ -4,6 +4,7 @@ import {
   deleteUserById,
   updateUserById,
 } from '../../../utilities/database';
+import { User } from '../../../utilities/types';
 
 var cloudinary = require('cloudinary').v2;
 cloudinary.config({
@@ -24,7 +25,7 @@ export default async function handler(
     return response.end(JSON.stringify({ errors: 'Not found' }));
   }
 
-  let user = {};
+  let user: User | undefined | {} = {};
 
   if (request.method === 'GET') {
     user = await getUserById(userId);

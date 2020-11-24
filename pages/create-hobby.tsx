@@ -6,7 +6,7 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import { Hobby } from '../utilities/types';
 import { isSessionTokenValid } from '../utilities/auth';
-import { getHobbyBySessionToken } from '../utilities/database';
+
 
 type Props = {
   hobbies: Hobby;
@@ -122,6 +122,7 @@ export default function NewHobby(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { getHobbyBySessionToken } = await import ('../utilities/database');
   const { session: token } = nextCookies(context);
   if (!isSessionTokenValid(token))
     return {

@@ -4,9 +4,9 @@ import camelcaseKeys from 'camelcase-keys';
 import snakeCaseKeys from 'snakecase-keys';
 import { Session, User, Hobby } from './types';
 
-// import extractHerokuDatabaseEnvVars from './extractHerokuDatabaseEnvVars';
+import extractHerokuDatabaseEnvVars from './setPostgresDefaultsOnHeroku';
 
-// extractHerokuDatabaseEnvVars();
+extractHerokuDatabaseEnvVars();
 
 dotenv.config();
 

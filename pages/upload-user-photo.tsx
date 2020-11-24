@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import nextCookies from 'next-cookies';
 import { User } from '../utilities/types';
 import { isSessionTokenValid } from '../utilities/auth';
-import { getUserBySessionToken, userToReactProps } from '../utilities/database';
 
 type Props = {
   user: User;
@@ -104,6 +103,9 @@ export default function hobbyUpload(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { getUserBySessionToken, userToReactProps } = await import(
+    '../utilities/database'
+  );
   const { session: token } = nextCookies(context);
 
   const redirectDestination = '/additional-user-info';

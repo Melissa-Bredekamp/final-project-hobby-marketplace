@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { isSessionTokenValid } from '../utilities/auth';
 import Layout from '../components/Layout';
-import { getUserBySessionToken, userToReactProps } from '../utilities/database';
 import { User } from '../utilities/types';
 
 export default function Profile(props: { user: User; loggedIn: boolean }) {
@@ -400,6 +399,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { getUserBySessionToken, userToReactProps } = await import ('../utilities/database');
   const { session: token } = nextCookies(context);
 
   if (!(await isSessionTokenValid(token))) {

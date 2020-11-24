@@ -299,7 +299,7 @@ export default function SingleUser(props: Props) {
                 body: JSON.stringify({ user: { photo: photo } }),
               });
               setEditingKey(null);
-            
+
             }}
           >
             save
