@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { isSessionTokenValid } from '../utilities/auth';
 import Layout from '../components/Layout';
-import { getUserBySessionToken } from '../utilities/database';
+import { getUserBySessionToken, userToReactProps } from '../utilities/database';
 import { User } from '../utilities/types';
 
 export default function Profile(props: { user: User; loggedIn: boolean }) {
@@ -22,6 +22,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
       <Layout>
         <Head>
           <title>User not found</title>
+          <link rel="icon" href="/favicon.svg" />
         </Head>
         User not found.
       </Layout>
@@ -414,5 +415,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // instead of two like done here
   const user = await getUserBySessionToken(token);
 
-  return { props: { user } };
+  const reactUser = userToReactProps(user);
+
+  return { props: { user: reactUser } };
 }

@@ -15,6 +15,7 @@ export default function Register(props: { token: string }) {
       <div>
         <Head>
           <title>Register</title>
+          <link rel="icon" href="/favicon.svg" />
         </Head>
 
         <h2>Register</h2>

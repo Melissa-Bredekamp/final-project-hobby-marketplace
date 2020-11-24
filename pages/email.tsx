@@ -6,6 +6,7 @@ export default function email() {
     <div>
       <Head>
         <title>Email</title>
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
         <main>

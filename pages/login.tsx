@@ -19,6 +19,7 @@ export default function Login(props: Props) {
     <div>
       <Head>
         <title>Login</title>
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout loggedIn={props.loggedIn}>
         <h2>Login</h2>

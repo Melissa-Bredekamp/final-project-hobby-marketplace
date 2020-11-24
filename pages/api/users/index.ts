@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   let users;
   let user;
-  console.log('updateUserByIddef', request.method, request.body);
+  // console.log('updateUserByIddef', request.method, request.body);
   if (request.method === 'GET') {
     users = await getUsers();
   } else if (request.method === 'POST') {

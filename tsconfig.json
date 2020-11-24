@@ -27,7 +27,9 @@
     "postgres.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.js"
+    "**/*.js",
+    "pages/upload-user-photo.jsx",
+    "pages/newsfeed.jsx"
   ],
   "exclude": ["node_modules"]
 }

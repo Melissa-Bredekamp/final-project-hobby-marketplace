@@ -95,6 +95,11 @@ input {
   border-radius: 4px;
 }
 
+.uploadPhotStyles {
+  margin-top: 140px;
+  text-align: center;
+  color: #1f1d1d;
+}
 .buttonStyles {
   width: 50%;
   padding: 12px 20px;
@@ -213,6 +218,8 @@ input {
 
 .hobbyTextStyles {
   /* line-height: 0.1; */
+  width: 240px;
+  height: 300px;
   background-color: #fad3d3;
   color: black;
   border-radius: 4px;
@@ -237,9 +244,17 @@ input {
   background-color: #fad3d3;
   line-height: 0.1;
   color: black;
-  margin: 40px;
+  /* margin: 40px; */
   padding: 10px;
-  margin-top: 50px;
+  margin-top: 110px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, auto);
+  grid-gap: 10px;
+}
+
+.breakStyles {
+  margin: 60px;
+  background-color: #f9f1f1;
 }
 
 .emailInputStyles {

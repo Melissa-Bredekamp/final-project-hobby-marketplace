@@ -8,6 +8,6 @@ exports.up = async (sql) => {
 exports.down = async (sql) => {
   await sql`
     ALTER TABLE hobby
-      DROP COLUMN hobby-offer;
+      DROP COLUMN hobby_offer;
   `;
 };

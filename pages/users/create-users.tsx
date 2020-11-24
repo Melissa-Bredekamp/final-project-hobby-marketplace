@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import nextCookies from 'next-cookies';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
@@ -21,13 +22,15 @@ export default function newUser(props: Props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [dateOfBirth, setdateOfBirth] = useState('');
+  const router = useRouter();
 
-  console.log(props);
-
+  // console.log(props);
+  // if (props.user === user.id)
   return (
     <div>
       <Head>
         <title>Create User</title>
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
         <div className="pageStyles">
@@ -51,7 +54,7 @@ export default function newUser(props: Props) {
                 }),
               });
               const jsonResponse = await response.json();
-              console.log('response:', jsonResponse);
+              // console.log('response:', jsonResponse);
               const newUser = jsonResponse.user;
               window.location.href = `/users/${newUser.id}`;
             }}
@@ -99,6 +102,7 @@ export default function newUser(props: Props) {
             <div className="footerStyles">
               {/* <Link href="/additional-user-info"> */}
               <button
+                onClick={() => router.push('/additional-user-info')}
                 data-cy="new-user-form-button"
                 className="centeredButtonStyles"
               >

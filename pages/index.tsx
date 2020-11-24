@@ -13,6 +13,7 @@ export default function LandingPage(props: Props) {
     <div>
       <Head>
         <title>Landing page</title>
+        <link rel="icon" href="/favicon.svg" />
       </Head>
 
       <div loggedIn={props.loggedIn}>
@@ -34,12 +35,19 @@ export default function LandingPage(props: Props) {
           </h1>
           <Link href="/register">
             <a>
-              <button className="landingPageButtonStyles">Register</button>
+              <button
+                data-cy="go-to-register"
+                className="landingPageButtonStyles"
+              >
+                Register
+              </button>
             </a>
           </Link>
           <Link href="/login">
             <a>
-              <button className="landingPageButtonStyles">Login</button>
+              <button data-cy="go-to-login" className="landingPageButtonStyles">
+                Login
+              </button>
             </a>
           </Link>
           <br />{' '}
@@ -48,7 +56,6 @@ export default function LandingPage(props: Props) {
               <a>Log out</a>
             </Link>
           </div>
-          {/* <button className="landingPageButtonStyles">Log out</button> */}
         </div>
       </div>
     </div>

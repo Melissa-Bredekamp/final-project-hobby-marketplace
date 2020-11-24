@@ -1,11 +1,12 @@
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import nextCookies from 'next-cookies';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import { Hobby } from '../utilities/types';
 import { isSessionTokenValid } from '../utilities/auth';
-import { getUserBySessionToken } from '../utilities/database';
+import { getHobbyBySessionToken } from '../utilities/database';
 
 type Props = {
   hobbies: Hobby;
@@ -16,35 +17,41 @@ export default function NewHobby(props: Props) {
   const [city, setCity] = useState('');
   const [availability, setAvailability] = useState('');
   const [aboutMe, setAboutMe] = useState('');
+  const router = useRouter();
 
   return (
     <div>
       <Head>
         <title>Create hobby</title>
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
         <div className="pageStyles">
-          <h1>Offer a hobby</h1>
+          <h1>Your hobby offer</h1>
           <form
             className="formStyles"
             onSubmit={async (event) => {
               event.preventDefault();
-              const response = await fetch('/api/users', {
+              const response = await fetch('/api/hobby', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  user: {
-                    hobbyoffer: hobbyOffer,
-                    availability: availability,
-                    city: city,
-                    aboutMe: aboutMe,
-                  },
+                  // hobbies: {
+                  id: props.hobbies.hobbyId,
+                  hobbyOffer: hobbyOffer,
+                  availability: availability,
+                  city: city,
+                  aboutMe: aboutMe,
+                  // },
                 }),
               });
-              const newHobby = (await response.json()).hobby;
-              window.location.href = `/users/${newHobby.id}`;
+              const jsonResponse = await response.json();
+              // console.log('jsonResponse', jsonResponse);
+              const newHobby = jsonResponse.hobbies;
+              // console.log(newHobby);
+              window.location.href = `/hobby/${newHobby.hobbyId}`;
             }}
           >
             <label>
@@ -55,7 +62,9 @@ export default function NewHobby(props: Props) {
                 placeholder="Enter hobby description"
                 name="HobbyOffer"
                 value={hobbyOffer}
-                onChange={(event) => setHobbyOffer(event.currentTarget.value)}
+                onChange={(event) =>
+                  setHobbyOffer(event.currentTarget.value.toUpperCase())
+                }
               />
             </label>
             <br />
@@ -96,7 +105,14 @@ export default function NewHobby(props: Props) {
             </label>
             <br />
             <div className="footerStyles">
-              <button className="centeredButtonStyles">Publish Hobby</button>
+              <button
+                onClick={() => router.push('/upload-hobby-photo')}
+                data-cy="new-user-hobby-button"
+                className="centeredButtonStyles"
+                type="submit"
+              >
+                Publish Hobby
+              </button>
             </div>
           </form>
         </div>
@@ -110,11 +126,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!isSessionTokenValid(token))
     return {
       redirect: {
-        destination: '/users/create-users',
+        destination: '/create-hobby',
         permanent: false,
       },
     };
-  const hobbies = await getUserBySessionToken(token);
-
+  const hobbies = await JSON.parse(
+    JSON.stringify(getHobbyBySessionToken(token)),
+  );
+  // console.log(hobbies);
   return { props: { hobbies } };
 }

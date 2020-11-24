@@ -1,5 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import nextCookies from 'next-cookies';
 import Head from 'next/head';
 import Layout from '../components/Layout';
@@ -17,13 +18,16 @@ export default function AdditionalUserInfo(props: Props) {
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
   const [interests, setInterests] = useState('');
+  const router = useRouter();
+
   return (
     <div>
       <Head>
         <title>Additional User Information</title>
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
-        <div className="registerContainer">
+        <div className="pageStyles">
           <h1>You're almost there!</h1>
           <form
             className="formStyles"
@@ -57,7 +61,6 @@ export default function AdditionalUserInfo(props: Props) {
                 type="text"
                 placeholder="email"
                 name="email"
-                required
                 value={email}
                 onChange={(event) => setEmail(event.currentTarget.value)}
               />
@@ -82,14 +85,14 @@ export default function AdditionalUserInfo(props: Props) {
                 data-cy="new-user-interests-input"
                 type="text"
                 placeholder="Enter your interests"
-                name="my interests"
-                required
+                name="myInterests"
                 value={interests}
                 onChange={(event) => setInterests(event.currentTarget.value)}
               />
               <br />
 
               <button
+                onClick={() => router.push('/upload-user-photo')}
                 data-cy="new-user-form-button"
                 className="centeredButtonStyles"
                 type="submit"

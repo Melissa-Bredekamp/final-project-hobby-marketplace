@@ -17,6 +17,8 @@ export type Hobby = {
   city: string;
   availability: string[];
   aboutMe: string;
+  hostFirstName: string;
+  hostLastName: string;
 };
 
 export type Session = {

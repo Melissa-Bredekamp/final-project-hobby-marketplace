@@ -2,9 +2,8 @@ import postgres from 'postgres';
 import dotenv from 'dotenv';
 import camelcaseKeys from 'camelcase-keys';
 import snakeCaseKeys from 'snakecase-keys';
-
 import { Session, User, Hobby } from './types';
-import { log } from 'console';
+
 // import extractHerokuDatabaseEnvVars from './extractHerokuDatabaseEnvVars';
 
 // extractHerokuDatabaseEnvVars();
@@ -89,6 +88,62 @@ export async function getUserBySessionToken(token: string | undefined) {
   return users.map((u) => camelcaseKeys(u))[0];
 }
 
+export async function getHobbyBySessionToken(token: string | undefined) {
+  if (typeof token === 'undefined') return undefined;
+
+  const hobby = await sql<Hobby[]>`
+    SELECT
+      users.id,
+      hobby.hobby_id,
+      hobby.city,
+      hobby.availability,
+      hobby.hobby_offer,
+      hobby.about_me
+    FROM
+      hobby,
+      users,
+      sessions
+    WHERE
+      sessions.token = ${token} AND
+      users.id = sessions.user_id;
+  `;
+
+  return hobby.map((h) => camelcaseKeys(h))[0];
+}
+
+export async function getHobby() {
+  const hobby = await sql`
+    SELECT * FROM hobby;
+  `;
+  return hobby.map((h) => camelcaseKeys(h));
+}
+
+export async function getHobbyById(hobbyId: string) {
+  if (!/^\d+$/.test(hobbyId)) return undefined;
+
+  const hobby = await sql<Hobby[]>`
+    SELECT
+      users.id host_id,
+      users.first_name host_first_name,
+      users.last_name host_last_name,
+      hobby.hobby_id,
+      hobby.city,
+      hobby.availability,
+      hobby.hobby_offer,
+      hobby.about_me
+    FROM
+      hobby,
+      users
+    WHERE
+      users.id = hobby.user_id AND
+      hobby_id = ${parseInt(hobbyId)}
+  `;
+
+  // console.log('hobby', hobby.map((h) => camelcaseKeys(h))[0]);
+
+  return hobby.map((h) => camelcaseKeys(h))[0];
+}
+
 export async function getUsers() {
   const users = await sql`
     SELECT * FROM users;
@@ -129,7 +184,7 @@ export async function updateUserById(id: string, user: User) {
   // Return undefined if the id is not
   // in the correct format
   if (!/^\d+$/.test(id)) return undefined;
-  console.log(user, 'abc');
+
   const allowedProperties = [
     'first_name',
     'last_name',
@@ -139,159 +194,63 @@ export async function updateUserById(id: string, user: User) {
     'city',
     'interests',
   ];
-  // const userProperties = Object.keys(user);
-
-  // if (userProperties.length < 1) {
-  //   return undefined;
-  // }
-
-  // const difference = userProperties.filter(
-  //   (prop) => !allowedProperties.includes(prop),
-  // );
-
-  // if (difference.length > 0) {
-  //   return undefined;
-  // }
-
   let users: User[] = [];
 
   const snakeKeysUser = snakeCaseKeys(user);
 
-  const sqlUpdateValues = [];
+  console.log(
+    'sql update values',
+    // sql(
+    //   snakeKeysUser,
+    ...Object.keys(user).filter((key) => allowedProperties.includes(key)),
+    // ),
+  );
 
-  // if (allowedProperties.includes(sqlUpdateValues))
   users = await sql<User[]>`
     UPDATE users SET ${sql(
       snakeKeysUser,
-      // 'first_name',
-      // 'last_name',
-      // 'date_of_birth',
-      // 'email',
-      // 'city',
-      // 'interests',
       ...Object.keys(user).filter((key) => allowedProperties.includes(key)),
     )}
-   WHERE id = ${user.id} RETURNING *;
+   WHERE id = ${id} RETURNING *;
 `;
-
-  // console.log('x snakeCaseKeys test', snakeCaseKeys('dateOfBirth'));
-
-  // const sqlUpdateValues = [];
-  // Object.keys(snakeKeysUser).forEach((key) => {
-  //   if (allowedProperties.includes(key)) {
-  //     sqlUpdateValues.push(`${key} = '${snakeKeysUser[key]}'`);
-  //   }
-  // });
-
-  // if (sqlUpdateValues.length < 1) {
-  //   console.log(
-  //     'update users failed, no valid properties to update',
-  //     id,
-  //     snakeKeysUser,
-  //   );
-  //   return undefined;
-  // }
-
-  // const sqlUpdate = `UPDATE users SET ${sqlUpdateValues.join(
-  //   ', ',
-  // )} WHERE id = ${id} RETURNING *;`;
-
-  // console.log('update sql', sqlUpdate);
-
-  // users = await sql<User[]>`${sqlUpdate}`;
-
-  // if ('firstName' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET first_name = ${user.firstName}
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
-
-  // if ('lastName' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET last_name = ${user.lastName}
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
-
-  // if ('email' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET email = ${user.email}
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
-
-  // if ('photo' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET photo = ${user.photo}
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
-
-  // if ('dateOfBirth' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET date_of_birth = ${user.dateOfBirth},
-  //       photo = adfasdf
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
-
-  // if ('city' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET city = ${user.city}
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
-
-  // if ('interests' in user) {
-  //   users = await sql<User[]>`
-  //     UPDATE users
-  //       SET interests = ${user.interests}
-  //       WHERE id = ${id}
-  //       RETURNING *;
-  //   `;
-  // }
 
   return users.map((u) => camelcaseKeys(u))[0];
 }
 
-export async function insertHobby(hobbies: Hobby) {
+export async function insertHobby(userId, hobbies: Hobby) {
   const requiredHobbyProperties = [
-    'hobbyOffer',
+    'user_id',
+    'hobby_offer',
     'availability',
-    'aboutMe',
+    'about_me',
     'city',
   ];
-  const hobbyProperties = Object.keys(hobbies);
 
-  if (hobbyProperties.length !== requiredHobbyProperties.length) {
+  hobbies.userId = userId;
+  const snakeKeysHobby = snakeCaseKeys(hobbies);
+  const hobbyProperties = Object.keys(snakeKeysHobby);
+
+  if (
+    requiredHobbyProperties.some(
+      (requiredKey) => !hobbyProperties.includes(requiredKey),
+    )
+  ) {
+    console.log(
+      'insertHobby error missing properties',
+      hobbyProperties,
+      requiredHobbyProperties,
+    );
     return undefined;
   }
-
-  if (hobbyProperties.length > 0) {
-    return undefined;
-  }
+  console.log('hobby2', snakeKeysHobby);
 
   const hobby = await sql<Hobby[]>`
-      INSERT INTO hobby
-      (hobbyOffer,
-      availability,
-      aboutMe,
-      city,)
-      VALUES
-      (${hobbies.hobbyOffer}, ${hobbies.city}, ${hobbies.availability}, ${hobbies.aboutMe})
+      INSERT INTO hobby ${sql(
+        snakeKeysHobby,
+        ...Object.keys(snakeKeysHobby).filter((key) =>
+          requiredHobbyProperties.includes(key),
+        ),
+      )}
       RETURNING *;
       `;
 
@@ -311,3 +270,47 @@ export async function deleteUserById(id: string) {
 
   return users.map((u) => camelcaseKeys(u))[0];
 }
+
+export async function getNewsfeedHobbyById() {
+  const hobby = await sql<Hobby[]>`
+    SELECT
+    hobby.hobby_id as hobby_id,
+    users.id as host_id,
+    hobby.hobby_offer,
+    users.photo as host_photo,
+      users.first_name as host_first_name,
+      users.last_name as host_last_name,
+      hobby.city,
+      hobby.availability
+      FROM
+      hobby,
+      users
+      -- hobby_photos
+      WHERE users.id = hobby.user_id 
+      -- AND
+      -- hobby.hobby_id = hobby_photos.hobby_id
+      ORDER BY
+      hobby_id desc 
+  `;
+  console.log('hobby', hobby.map((h) => camelcaseKeys(h))[0]);
+
+  return hobby.map((h) => camelcaseKeys(h));
+}
+
+// export async function insertUserPhotoUrlByUserId(userId, url, token) {
+//   const photoUrl = await sql`
+//   UPDATE users
+//   SET photo_title =  ${url}
+// WHERE user_id = (SELECT user_id FROM sessions WHERE
+//   sessions.token = ${token} ) ;`;
+// }
+
+// export async function insertHobbyPhotoUrlByUserId(userId, url, token) {
+//   console.log(userId, url, token);
+//   const photoUrl = await sql`
+
+//   UPDATE users
+//   SET photo_title =  ${url}
+// WHERE user_id = (SELECT user_id FROM sessions WHERE
+//   sessions.token = ${token} ) ;`;
+// }
