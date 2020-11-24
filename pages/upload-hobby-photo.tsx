@@ -1,12 +1,10 @@
 import { GetServerSidePropsContext } from 'next';
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import nextCookies from 'next-cookies';
 import { User } from '../utilities/types';
-import { isSessionTokenValid } from '../utilities/auth';
-
 
 type Props = {
   user: User;
@@ -15,13 +13,13 @@ type Props = {
 };
 
 export default function upload(props: Props) {
-  const [hobbyPhoto, setHobbyPhoto] = useState();
+  const [hobbyPhoto, setHobbyPhoto] = useState<string | null>();
   const router = useRouter();
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log(JSON.stringify(event.target.files, null, 2));
-    console.log(event.target.files[0]);
-    const file = event.target.files[0];
+    console.log(event.target.files?.[0]);
+    const file = event.target.files?.[0];
     const reader = new FileReader();
 
     if (file) {
@@ -32,7 +30,7 @@ export default function upload(props: Props) {
         function () {
           console.log('load', reader.result);
           // convert image file to base64 string
-          setHobbyPhoto(reader.result);
+          setHobbyPhoto(reader.result as string);
           // preview.src = reader.result;
         },
         false,
@@ -77,7 +75,7 @@ export default function upload(props: Props) {
               <button
                 className="buttonStyles"
                 type="submit"
-                disable={!hobbyPhoto}
+                // disable={!hobbyPhoto}
                 onClick={async () => {
                   console.log(hobbyPhoto);
                   await fetch(`/api/users/${props.user.id}`, {
@@ -104,19 +102,22 @@ export default function upload(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { getUserBySessionToken, userToReactProps } = await import ('../utilities/database');
+  const { getUserBySessionToken, userToReactProps } = await import(
+    '../utilities/database'
+  );
   const { session: token } = nextCookies(context);
 
   const redirectDestination = '/additional-user-info';
 
-  if (!isSessionTokenValid(token))
+  const user = await getUserBySessionToken(token);
+  if (!user){
     return {
       redirect: {
         destination: '/users/create-users',
         permanent: false,
       },
     };
-  const user = await getUserBySessionToken(token);
+  }
   const reactUser = userToReactProps(user);
 
   return { props: { user: reactUser } };

@@ -2,7 +2,7 @@ import postgres from 'postgres';
 import dotenv from 'dotenv';
 import camelcaseKeys from 'camelcase-keys';
 import snakeCaseKeys from 'snakecase-keys';
-import { Session, User, Hobby } from './types';
+import { Session, User, Hobby, UserWithDate } from './types';
 
 import extractHerokuDatabaseEnvVars from './setPostgresDefaultsOnHeroku';
 
@@ -67,7 +67,7 @@ export async function insertSession(token: string, userId: number) {
 export async function getUserBySessionToken(token: string | undefined) {
   if (typeof token === 'undefined') return undefined;
 
-  const users = await sql<User[]>`
+  const users = await sql<UserWithDate[]>`
     SELECT
       users.id,
       users.first_name,
@@ -156,14 +156,14 @@ export async function getUserById(id: string) {
   // in the correct format
   if (!/^\d+$/.test(id)) return undefined;
 
-  const users = await sql<User[]>`
+  const users = await sql<UserWithDate[]>`
     SELECT * FROM users WHERE id = ${id};
   `;
 
   return users.map((u) => camelcaseKeys(u))[0];
 }
 
-export function userToReactProps(user = {}) {
+export function userToReactProps(user: UserWithDate) {
   return Object.assign({}, user, {
     dateOfBirth: user.dateOfBirth
       ? user.dateOfBirth.toISOString().substr(0, 10)
@@ -172,7 +172,7 @@ export function userToReactProps(user = {}) {
 }
 
 export async function getUserByUsername(username: string) {
-  const users = await sql<User[]>`
+  const users = await sql<UserWithDate[]>`
     SELECT * FROM users WHERE username = ${username};
   `;
 
@@ -205,19 +205,29 @@ export async function updateUserById(id: string, user: User) {
     ...Object.keys(user).filter((key) => allowedProperties.includes(key)),
     // ),
   );
-
+  type AllowedPropertiesKeys =
+    | 'username'
+    | 'id'
+    | 'passwordHash'
+    | 'firstName'
+    | 'lastName'
+    | 'dateOfBirth'
+    | 'city'
+    | 'interests'
+    | 'photo'
+    | 'email';
+  const userAllowedProperties = (Object.keys(user).filter((key) =>
+    allowedProperties.includes(key),
+  ) as unknown) as AllowedPropertiesKeys[];
   users = await sql<User[]>`
-    UPDATE users SET ${sql(
-      snakeKeysUser,
-      ...Object.keys(user).filter((key) => allowedProperties.includes(key)),
-    )}
+    UPDATE users SET ${sql(snakeKeysUser, ...userAllowedProperties)}
    WHERE id = ${id} RETURNING *;
 `;
 
   return users.map((u) => camelcaseKeys(u))[0];
 }
 
-export async function insertHobby(userId, hobbies: Hobby) {
+export async function insertHobby(userId: number, hobbies: Hobby) {
   const requiredHobbyProperties = [
     'user_id',
     'hobby_offer',
@@ -226,8 +236,11 @@ export async function insertHobby(userId, hobbies: Hobby) {
     'city',
   ];
 
-  hobbies.userId = userId;
-  const snakeKeysHobby = snakeCaseKeys(hobbies);
+  const snakeKeysHobby: Hobby & { userId: number } = {
+    ...snakeCaseKeys(hobbies),
+    userId: userId,
+  };
+
   const hobbyProperties = Object.keys(snakeKeysHobby);
 
   if (
@@ -244,13 +257,20 @@ export async function insertHobby(userId, hobbies: Hobby) {
   }
   console.log('hobby2', snakeKeysHobby);
 
+  type HobbyRequiredPropertiesKey =
+    | 'city'
+    | 'userId'
+    | 'hobbyId'
+    | 'hobbyOffer'
+    | 'availability'
+    | 'aboutMe'
+    | 'hostFirstName'
+    | 'hostLastName';
+  const hobbyRequiredProperties = (Object.keys(snakeKeysHobby).filter((key) =>
+    requiredHobbyProperties.includes(key),
+  ) as unknown) as HobbyRequiredPropertiesKey[];
   const hobby = await sql<Hobby[]>`
-      INSERT INTO hobby ${sql(
-        snakeKeysHobby,
-        ...Object.keys(snakeKeysHobby).filter((key) =>
-          requiredHobbyProperties.includes(key),
-        ),
-      )}
+      INSERT INTO hobby ${sql(snakeKeysHobby, ...hobbyRequiredProperties)}
       RETURNING *;
       `;
 

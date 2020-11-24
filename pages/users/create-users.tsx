@@ -120,15 +120,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { session: token } = nextCookies(context);
 
   const redirectDestination = '/additional-user-info';
-
-  if (!isSessionTokenValid(token))
+  
+  const user = await getUserBySessionToken(token);
+  if (!user)
     return {
       redirect: {
         destination: '/users/create-users',
         permanent: false,
       },
     };
-  const user = await getUserBySessionToken(token);
   const reactUser = userToReactProps(user);
 
   return { props: { user: reactUser } };

@@ -8,7 +8,7 @@ exports.up = async (sql) => {
 		last_name varchar(40),
 		email varchar(100),
 		date_of_birth Date NOT NULL,
-		photo varchar(40),
+		photo varchar(240),
 		city varchar(40),
 		interests varchar(100)
 	);

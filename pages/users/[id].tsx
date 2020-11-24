@@ -389,6 +389,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     '../../utilities/database'
   );
   const user = await getUserById(id);
+  if(!user){
+    return {
+      redirect: {
+        destination: '/users/create-users',
+        permanent: false,
+      },
+    };
+  }
   const reactUser = userToReactProps(user);
 
   const props: { user?: User } = {};

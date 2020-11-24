@@ -1,14 +1,7 @@
-import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import Layout from '../components/Layout';
 import Link from 'next/link';
-import nextCookies from 'next-cookies';
-import { isSessionTokenValid } from '../utilities/auth';
 
-type Props = { loggedIn: boolean };
-
-export default function LandingPage(props: Props) {
-  const loggedInPassed = typeof props.loggedIn !== 'undefined';
+export default function LandingPage() {
   return (
     <div>
       <Head>
@@ -16,7 +9,7 @@ export default function LandingPage(props: Props) {
         <link rel="icon" href="/favicon.svg" />
       </Head>
 
-      <div loggedIn={props.loggedIn}>
+      <div>
         <div className="LandingPageStyles">
           <div className="LogoCenterStyles">
             <Link href="/">
@@ -60,10 +53,4 @@ export default function LandingPage(props: Props) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { session: token } = nextCookies(context);
-  const loggedIn = await isSessionTokenValid(token);
-  return { props: { loggedIn } };
 }

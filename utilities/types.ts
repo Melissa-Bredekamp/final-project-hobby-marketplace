@@ -4,9 +4,9 @@ export type User = {
   username: string;
   firstName: string;
   lastName: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   city: string;
-  interests: string[];
+  interests: string;
   photo: string;
   email: string;
 };
@@ -26,4 +26,17 @@ export type Session = {
   token: string;
   expiryTimestamp: Date;
   userId: number;
+};
+
+export type UserWithDate = {
+  id: number;
+  passwordHash: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  city: string;
+  interests: string;
+  photo: string;
+  email: string;
 };

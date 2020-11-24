@@ -186,7 +186,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
             <h2>Date of Birth: {dateOfBirth}</h2>
             {editingKey === 'dateOfBirth' ? (
               <input
-                value={dateOfBirth}
+                value={dateOfBirth.toString()}
                 onChange={(event) => setDateOfBirth(event.currentTarget.value)}
               />
             ) : (
@@ -399,9 +399,12 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { getUserBySessionToken, userToReactProps } = await import ('../utilities/database');
+  const { getUserBySessionToken, userToReactProps } = await import(
+    '../utilities/database'
+  );
   const { session: token } = nextCookies(context);
 
+  const user = await getUserBySessionToken(token);
   if (!(await isSessionTokenValid(token))) {
     return {
       redirect: {
@@ -413,7 +416,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // TODO: Actually, you could do this with one query
   // instead of two like done here
-  const user = await getUserBySessionToken(token);
 
   const reactUser = userToReactProps(user);
 

@@ -1,5 +1,4 @@
 import nextCookies from 'next-cookies';
-import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import { isSessionTokenValid } from '../utilities/auth';

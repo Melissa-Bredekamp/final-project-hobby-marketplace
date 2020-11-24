@@ -29,7 +29,8 @@
     "**/*.tsx",
     "**/*.js",
     "pages/upload-user-photo.jsx",
-    "pages/newsfeed.jsx"
+    "pages/newsfeed.jsx",
+    "pages/email.jsx"
   ],
   "exclude": ["node_modules"]
 }
