@@ -7,7 +7,6 @@ import Layout from '../components/Layout';
 import { Hobby } from '../utilities/types';
 import { isSessionTokenValid } from '../utilities/auth';
 
-
 type Props = {
   hobbies: Hobby;
 };
@@ -48,9 +47,9 @@ export default function NewHobby(props: Props) {
                 }),
               });
               const jsonResponse = await response.json();
-              // console.log('jsonResponse', jsonResponse);
-              const newHobby = jsonResponse.hobbies;
-              // console.log(newHobby);
+              console.log('jsonResponse', jsonResponse);
+              const newHobby = jsonResponse.hobby;
+              console.log(newHobby);
               window.location.href = `/hobby/${newHobby.hobbyId}`;
             }}
           >
@@ -104,16 +103,15 @@ export default function NewHobby(props: Props) {
               />
             </label>
             <br />
-            <div className="footerStyles">
-              <button
-                onClick={() => router.push('/upload-hobby-photo')}
-                data-cy="new-user-hobby-button"
-                className="centeredButtonStyles"
-                type="submit"
-              >
-                Publish Hobby
-              </button>
-            </div>
+
+            <button
+              onClick={() => router.push('/upload-hobby-photo')}
+              data-cy="new-user-hobby-button"
+              className="centeredButtonStyles"
+              type="submit"
+            >
+              Publish Hobby
+            </button>
           </form>
         </div>
       </Layout>
@@ -122,7 +120,7 @@ export default function NewHobby(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { getHobbyBySessionToken } = await import ('../utilities/database');
+  const { getHobbyBySessionToken } = await import('../utilities/database');
   const { session: token } = nextCookies(context);
   if (!isSessionTokenValid(token))
     return {

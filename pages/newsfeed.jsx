@@ -2,6 +2,7 @@ import nextCookies from 'next-cookies';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import { isSessionTokenValid } from '../utilities/auth';
+import Link from 'next/link';
 
 export default function newsfeed(props) {
   console.log(props.hobbies, 'props.hobbies');
@@ -15,12 +16,12 @@ export default function newsfeed(props) {
       <Layout>
         <main>
           <div className="newsfeedStyles">
-            {props.hobbies.map((hobby) => {
+            {props.hobbies.map((hobby) => (
               // console.log(hobby.hobbyOffer.toUpperCase());
-              return (
-                <div key={hobby.id}>
-                  <h4>{hobby.hobbyOffer}</h4>
 
+              <Link href={`/hobby/${hobby.hobbyId}`}>
+                <div key={hobby.hobbyId}>
+                  <h4>{hobby.hobbyOffer}</h4> 
                   <div className="newsfeedFlexStyles">
                     <span>image</span>
                     <div>
@@ -39,8 +40,8 @@ export default function newsfeed(props) {
                     }}
                   ></div>
                 </div>
-              );
-            })}
+              </Link>
+            ))}
           </div>
         </main>
       </Layout>

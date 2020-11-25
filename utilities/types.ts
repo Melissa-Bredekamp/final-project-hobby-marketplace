@@ -21,6 +21,16 @@ export type Hobby = {
   hostLastName: string;
 };
 
+export type HobbySnakeCase = {
+  hobby_id: number;
+  hobby_offer: string;
+  city: string;
+  availability: string[];
+  about_me: string;
+  host_first_name: string;
+  host_last_name: string;
+};
+
 export type Session = {
   id: number;
   token: string;
@@ -39,4 +49,13 @@ export type UserWithDate = {
   interests: string;
   photo: string;
   email: string;
+};
+
+export type Message = {
+  messageId: number;
+  senderId: string;
+  recipientId: string;
+  sentDate: string;
+  subject: string;
+  text: string;
 };

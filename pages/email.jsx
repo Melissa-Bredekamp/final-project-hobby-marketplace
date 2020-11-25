@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
+import { useRouter } from 'next/router';
 
 export default function email() {
+  const router = useRouter();
   return (
     <div>
       <Head>
@@ -22,8 +24,13 @@ export default function email() {
                     cols="30"
                   ></textarea>
                 </div>
-                <div className="footerStyles">
-                  <button className="centeredButtonStyles">Send</button>
+                <div>
+                  <button
+                    onClick={() => router.push('/inbox')}
+                    className="centeredButtonStyles"
+                  >
+                    Send
+                  </button>
                 </div>
               </form>
             </div>

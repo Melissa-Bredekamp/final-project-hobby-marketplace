@@ -2,7 +2,14 @@ import postgres from 'postgres';
 import dotenv from 'dotenv';
 import camelcaseKeys from 'camelcase-keys';
 import snakeCaseKeys from 'snakecase-keys';
-import { Session, User, Hobby, UserWithDate } from './types';
+import {
+  Session,
+  User,
+  Hobby,
+  UserWithDate,
+  Message,
+  HobbySnakeCase,
+} from './types';
 
 import extractHerokuDatabaseEnvVars from './setPostgresDefaultsOnHeroku';
 
@@ -227,7 +234,7 @@ export async function updateUserById(id: string, user: User) {
   return users.map((u) => camelcaseKeys(u))[0];
 }
 
-export async function insertHobby(userId: number, hobbies: Hobby) {
+export async function insertHobby(userId: number, hobby: Hobby) {
   const requiredHobbyProperties = [
     'user_id',
     'hobby_offer',
@@ -236,9 +243,9 @@ export async function insertHobby(userId: number, hobbies: Hobby) {
     'city',
   ];
 
-  const snakeKeysHobby: Hobby & { userId: number } = {
-    ...snakeCaseKeys(hobbies),
-    userId: userId,
+  const snakeKeysHobby: HobbySnakeCase & { user_id: number } = {
+    ...snakeCaseKeys<HobbySnakeCase>((hobby as unknown) as HobbySnakeCase),
+    user_id: userId,
   };
 
   const hobbyProperties = Object.keys(snakeKeysHobby);
@@ -259,22 +266,22 @@ export async function insertHobby(userId: number, hobbies: Hobby) {
 
   type HobbyRequiredPropertiesKey =
     | 'city'
-    | 'userId'
-    | 'hobbyId'
-    | 'hobbyOffer'
+    | 'user_id'
+    | 'hobby_id'
+    | 'hobby_offer'
     | 'availability'
-    | 'aboutMe'
-    | 'hostFirstName'
-    | 'hostLastName';
+    | 'about_me'
+    | 'host_first_name'
+    | 'host_last_name';
   const hobbyRequiredProperties = (Object.keys(snakeKeysHobby).filter((key) =>
     requiredHobbyProperties.includes(key),
   ) as unknown) as HobbyRequiredPropertiesKey[];
-  const hobby = await sql<Hobby[]>`
+  const newHobby = await sql<Hobby[]>`
       INSERT INTO hobby ${sql(snakeKeysHobby, ...hobbyRequiredProperties)}
       RETURNING *;
       `;
-
-  return hobby.map((h) => camelcaseKeys(h))[0];
+  console.log(newHobby, 'newHobby');
+  return newHobby.map((h) => camelcaseKeys(h))[0];
 }
 
 export async function deleteUserById(id: string) {
@@ -317,20 +324,86 @@ export async function getNewsfeedHobbyById() {
   return hobby.map((h) => camelcaseKeys(h));
 }
 
-// export async function insertUserPhotoUrlByUserId(userId, url, token) {
-//   const photoUrl = await sql`
-//   UPDATE users
-//   SET photo_title =  ${url}
-// WHERE user_id = (SELECT user_id FROM sessions WHERE
-//   sessions.token = ${token} ) ;`;
-// }
+export async function insertMessage(userId: number, message: Message) {
+  const requiredMessageProperties = [
+    'user_id',
+    'message_id',
+    'sender_id',
+    'recipient_id',
+    'sent_date',
+    'subject',
+    'text',
+  ];
 
-// export async function insertHobbyPhotoUrlByUserId(userId, url, token) {
-//   console.log(userId, url, token);
-//   const photoUrl = await sql`
+  const snakeKeysMessage: Message & { userId: number } = {
+    ...snakeCaseKeys(message),
+    userId: userId,
+  };
 
-//   UPDATE users
-//   SET photo_title =  ${url}
-// WHERE user_id = (SELECT user_id FROM sessions WHERE
-//   sessions.token = ${token} ) ;`;
-// }
+  const messageProperties = Object.keys(snakeKeysMessage);
+
+  if (
+    requiredMessageProperties.some(
+      (requiredKey) => !messageProperties.includes(requiredKey),
+    )
+  ) {
+    console.log(
+      'insertMessage error missing properties',
+      messageProperties,
+      requiredMessageProperties,
+    );
+    return undefined;
+  }
+  console.log('message2', snakeKeysMessage);
+
+  type MessageRequiredPropertiesKey =
+    | 'userId'
+    | 'messageId'
+    | 'senderId'
+    | 'recipientId'
+    | 'sentDate'
+    | 'subject'
+    | 'text';
+  const messageRequiredProperties = (Object.keys(
+    snakeKeysMessage,
+  ).filter((key) =>
+    requiredMessageProperties.includes(key),
+  ) as unknown) as MessageRequiredPropertiesKey[];
+  const messages = await sql<Message[]>`
+      INSERT INTO messages ${sql(
+        snakeKeysMessage,
+        ...messageRequiredProperties,
+      )}
+      RETURNING *;
+      `;
+
+  return messages.map((m) => camelcaseKeys(m))[0];
+}
+
+export async function getMessages() {
+  const messages = await sql<Message[]>`
+    SELECT
+      users.id as host_id,
+      users.first_name as host_first_name,
+      users.last_name as host_last_name,
+      messages.message_id,
+      messages.sender_id,
+      threads.conversation_id,
+      threads.owner_id,
+      threads.remote_user_id,
+      messages.sent_date,
+      messages.subject,
+      messages.text
+    FROM
+    users,
+      messages,
+      threads
+    WHERE
+      users.id = threads.remote_user_id AND threads.conversation_id = threads.conversation_id
+  `;
+  console.log(
+    'messages',
+    messages.map((m) => camelcaseKeys(m)),
+  );
+  return messages.map((m) => camelcaseKeys(m));
+}

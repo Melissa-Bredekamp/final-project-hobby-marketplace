@@ -111,7 +111,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     '../utilities/database'
   );
   const { session: token } = nextCookies(context);
-  if (!isSessionTokenValid(token)) {
+  const user = await getUserBySessionToken(token);
+  if (!user) {
     return {
       redirect: {
         destination: '/additional-user-info',
@@ -119,7 +120,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
-  const user = await getUserBySessionToken(token);
   const reactUser = userToReactProps(user);
 
   return { props: { user: reactUser } };

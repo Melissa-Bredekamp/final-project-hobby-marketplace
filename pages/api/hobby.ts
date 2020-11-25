@@ -11,38 +11,38 @@ export default async function hobbyHandler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  let hobby;
-  let hobbies;
-
   // console.log('getHobbyById', request.method, request.body);
   if (request.method === 'GET') {
-    hobby = await getHobby();
+    // rewrite this code when needed
+    // hobby = await getHobby();
   } else if (request.method === 'POST') {
     if (!request.headers.cookie) {
       // TODO: Return proper message from the server
       return response.status(401).send({ success: false });
     }
+
     const newHobby = request.body;
+    console.log(request.body);
     const cookiesParsed = cookie.parse(request.headers.cookie);
     const sessionToken = cookiesParsed.session;
     const user = await getUserBySessionToken(sessionToken);
 
     if (user) {
       const userId = user?.id;
-      hobbies = await insertHobby(userId, newHobby);
+      const hobby = await insertHobby(userId, newHobby);
+      response.send({
+        hobby: hobby,
+      });
+      console.log(hobby);
     }
   }
 
-  response.statusCode = 200;
-  response.setHeader('Content-Type', 'application/json');
-  response.send(
-    JSON.stringify({
-      // Only add "hobbies" key to object if users exists
-      // (eg. GET request)
-      ...(hobbies ? { hobbies: hobbies } : {}),
-      // Only add "hobby" key to object if user exists
-      // (eg. POST request)
-      ...(hobby ? { hobby: hobby } : {}),
-    }),
-  );
+  // response.send({
+  //   // Only add "hobbies" key to object if users exists
+  //   // (eg. GET request)
+  //   ...(hobbies ? { hobbies: hobbies } : {}),
+  //   // Only add "hobby" key to object if user exists
+  //   // (eg. POST request)
+  //   ...(hobby ? { hobby: hobby } : {}),
+  // });
 }

@@ -94,7 +94,7 @@ export default function Register(props: { token: string }) {
             </button>
           </div>
         </form>
-        <p style={{ color: 'red' }}>{errorMessage}</p>
+        <p style={{ color: 'red', justifyContent: 'center' }}>{errorMessage}</p>
 
         {/* <Link href="/login">
             <a>Login</a>

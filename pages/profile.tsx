@@ -404,7 +404,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   );
   const { session: token } = nextCookies(context);
 
-  const user = await getUserBySessionToken(token);
   if (!(await isSessionTokenValid(token))) {
     return {
       redirect: {
@@ -416,6 +415,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // TODO: Actually, you could do this with one query
   // instead of two like done here
+  const user = await getUserBySessionToken(token);
 
   const reactUser = userToReactProps(user);
 
