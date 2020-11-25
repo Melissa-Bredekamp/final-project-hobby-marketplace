@@ -11,7 +11,7 @@ import {
   HobbySnakeCase,
 } from './types';
 
-import extractHerokuDatabaseEnvVars from './setPostgresDefaultsOnHeroku';
+import extractHerokuDatabaseEnvVars from './extractHerokuDatabaseEnvVars';
 
 extractHerokuDatabaseEnvVars();
 
