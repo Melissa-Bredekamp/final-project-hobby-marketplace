@@ -19,8 +19,6 @@ export default function SingleUser(props: Props) {
   const [photo, setPhoto] = useState(props.user?.photo);
   const [interests, setInterests] = useState(props.user?.interests);
 
-  //TO DO DATE FUNCTION
-
   if (!props.user) {
     return (
       <Layout>
@@ -72,7 +70,6 @@ export default function SingleUser(props: Props) {
                   body: JSON.stringify({ user: { firstName: firstName } }),
                 });
                 setEditingKey(null);
-                // TODO: Save to server
               }}
             >
               save
@@ -159,7 +156,6 @@ export default function SingleUser(props: Props) {
                   body: JSON.stringify({ user: { email: email } }),
                 });
                 setEditingKey(null);
-                // TODO: Save to server
               }}
             >
               save
@@ -384,12 +380,11 @@ export default function SingleUser(props: Props) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = context.query.id as string;
 
-  // import { users } from '../utilities/database';
   const { getUserById, userToReactProps } = await import(
     '../../utilities/database'
   );
   const user = await getUserById(id);
-  if(!user){
+  if (!user) {
     return {
       redirect: {
         destination: '/users/create-users',

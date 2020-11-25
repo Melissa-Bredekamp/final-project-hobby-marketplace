@@ -36,7 +36,7 @@ export default function hobby(props: { hobbies: Hobby }) {
             <div className="hobbyTextStyles">
               <p>{props.hobbies.aboutMe}</p>
             </div>
-            <div className="footerStyles">
+            <div>
               <button
                 onClick={() => router.push('/email')}
                 className="centeredButtonStyles"

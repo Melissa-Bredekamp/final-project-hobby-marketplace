@@ -1,12 +1,10 @@
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import nextCookies from 'next-cookies';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import { User } from '../../utilities/types';
-import { isSessionTokenValid } from '../../utilities/auth';
 
 type Props = {
   user: User;
@@ -50,7 +48,6 @@ export default function newUser(props: Props) {
                 }),
               });
               const jsonResponse = await response.json();
-              // console.log('response:', jsonResponse);
               const newUser = jsonResponse.user;
               window.location.href = `/users/${newUser.id}`;
             }}
@@ -95,8 +92,7 @@ export default function newUser(props: Props) {
               />
             </label>
             <br />
-            <div className="footerStyles">
-              {/* <Link href="/additional-user-info"> */}
+            <div>
               <button
                 onClick={() => router.push('/additional-user-info')}
                 data-cy="new-user-form-button"
@@ -104,7 +100,6 @@ export default function newUser(props: Props) {
               >
                 Create profile
               </button>
-              {/* </Link> */}
             </div>
           </form>
         </div>
@@ -120,7 +115,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { session: token } = nextCookies(context);
 
   const redirectDestination = '/additional-user-info';
-  
+
   const user = await getUserBySessionToken(token);
   if (!user)
     return {
