@@ -28,7 +28,7 @@ export default function NewHobby(props: Props) {
         <div className="pageStyles">
           <h1>Your hobby offer</h1>
           <form
-            className="formStyles"
+            className="createHobbyFormStyles"
             onSubmit={async (event) => {
               event.preventDefault();
               const response = await fetch('/api/hobby', {
@@ -132,6 +132,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const hobbies = await JSON.parse(
     JSON.stringify(getHobbyBySessionToken(token)),
   );
-  // console.log(hobbies);
   return { props: { hobbies } };
 }

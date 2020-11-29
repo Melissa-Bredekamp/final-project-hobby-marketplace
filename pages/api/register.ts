@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import Tokens from 'csrf';
-import { getUserByUsername, registerUser } from '../../utilities/database';
+import {
+  getUserByUsernameWithPasswordHash,
+  registerUser,
+} from '../../utilities/database';
 
 const tokens = new Tokens();
 
@@ -30,7 +33,7 @@ export default async function handler(
 
   // Check if there's a database user matching this username
   const usernameAlreadyTaken =
-    typeof (await getUserByUsername(username)) !== 'undefined';
+    typeof (await getUserByUsernameWithPasswordHash(username)) !== 'undefined';
 
   if (usernameAlreadyTaken) {
     // TODO: Send back a full error message here

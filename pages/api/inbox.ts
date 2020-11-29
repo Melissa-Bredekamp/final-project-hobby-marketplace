@@ -1,17 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { insertMessage, getMessages } from '../../utilities/database';
+import {
+  insertMessage,
+  getCoversationsByUserId,
+} from '../../utilities/database';
 
 export default async function messageHandler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
+  console.log(request.body);
   let messages;
   let message;
   if (request.method === 'GET') {
-    messages = await getMessages();
+    messages = await getCoversationsByUserId(6);
   } else if (request.method === 'POST') {
-    const newMessage = request.body.message;
-    message = await insertMessage(newMessage.id, newMessage);
+    const newMessage = request.body;
+    const senderId = request.body.senderId;
+    message = await insertMessage(senderId, newMessage);
   }
   response.statusCode = 200;
   response.setHeader('Content-Type', 'application/json');

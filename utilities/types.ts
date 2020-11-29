@@ -16,6 +16,7 @@ export type Hobby = {
   hobbyOffer: string;
   city: string;
   availability: string[];
+  hobbPhoto: string;
   aboutMe: string;
   hostFirstName: string;
   hostLastName: string;
@@ -26,6 +27,7 @@ export type HobbySnakeCase = {
   hobby_offer: string;
   city: string;
   availability: string[];
+  hobby_photo: string;
   about_me: string;
   host_first_name: string;
   host_last_name: string;
@@ -51,11 +53,28 @@ export type UserWithDate = {
   email: string;
 };
 
-export type Message = {
+export type MessageSnakeCase = {
   messageId: number;
   senderId: string;
-  recipientId: string;
-  sentDate: string;
   subject: string;
   text: string;
+  host_first_name: string;
+  host_last_name: string;
+};
+
+export type Message = {
+  senderId: number;
+  subject: string;
+  text: string;
+  host_first_name: string;
+  host_last_name: string;
+};
+
+export type Conversations = {
+  messageId: number;
+  senderId: string;
+  subject: string[];
+  text: string[];
+  host_first_name: string;
+  host_last_name: string;
 };

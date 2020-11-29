@@ -5,10 +5,10 @@ import Head from 'next/head';
 import Layout from '../../components/Layout';
 import { isSessionTokenValid } from '../../utilities/auth';
 import { Hobby } from '../../utilities/types';
+import Link from 'next/link';
 
 type Props = {
   hobbies: Hobby;
-  // users: User;
 };
 
 export default function hobby(props: { hobbies: Hobby }) {
@@ -38,11 +38,34 @@ export default function hobby(props: { hobbies: Hobby }) {
             </div>
             <div>
               <button
-                onClick={() => router.push('/email')}
-                className="centeredButtonStyles"
+                onClick={() => router.push('/inbox')}
+                className="contactButtonStyles"
+                type="submit"
               >
-                Email me
+                Contact me
               </button>
+              <button
+                className="DeleteButtonStyles"
+                onClick={async () => {
+                  const answer = window.confirm(
+                    `Really delete user ${props.hobbies.hobbyOffer}?`,
+                  );
+                  if (answer === true) {
+                    await fetch(`/api/users/${props.hobbies.hobbyId}`, {
+                      method: 'DELETE',
+                    });
+
+                    window.location.reload();
+                  }
+                }}
+              >
+                delete user
+              </button>
+              <div>
+                <Link href="/logout">
+                  <a>Log out</a>
+                </Link>
+              </div>
             </div>
           </div>
         </main>

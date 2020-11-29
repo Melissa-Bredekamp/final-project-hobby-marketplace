@@ -30,7 +30,7 @@
     "**/*.js",
     "pages/upload-user-photo.jsx",
     "pages/newsfeed.jsx",
-    "pages/email.jsx"
+    "pages/hobby/email.jsx"
   ],
   "exclude": ["node_modules"]
 }

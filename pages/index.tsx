@@ -44,11 +44,6 @@ export default function LandingPage() {
             </a>
           </Link>
           <br />{' '}
-          <div>
-            <Link href="/logout">
-              <a>Log out</a>
-            </Link>
-          </div>
         </div>
       </div>
     </div>

@@ -29,26 +29,13 @@ export default async function handler(request, response) {
   } else if (request.method === 'PATCH') {
     const newUser = request.body.user;
 
-    // console.log(request.body.user.photo);
-
     if (newUser.photoFile) {
-      // 1. request.....photo -> photoFile. .photo ist ab jetzt immer die URL. .photoFile = neues Bild im edit user request only.
-      // 2. neue Funktion schreiben: photoFile übergeben und photoUrl erhalten.
-      // 3.
       newUser.photo = (await photoUpload(newUser.photoFile)) || '';
+      console.log('photo url x1', newUser.photo);
       delete newUser.photoFile;
-      const data = request.body.user.photo;
-
-      // console.log('x1 updateUserById', userId, {
-      //   photo: result.secure_url,
-      // });
-      const user = await updateUserById(userId, {
-        photo: result.secure_url,
-      });
-      // console.log('x2 updateUserById', userId, user);
-      // return response.status(200).send({ success: true, user: user });
     }
-    user = await updateUserById(parseInt(userId), newUser);
+
+    user = await updateUserById(userId, newUser);
   } else if (request.method === 'DELETE') {
     user = await deleteUserById(userId);
   }

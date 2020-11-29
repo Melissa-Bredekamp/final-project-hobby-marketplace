@@ -4,7 +4,7 @@ import argon2 from 'argon2';
 import cookie from 'cookie';
 import {
   deleteExpiredSessions,
-  getUserByUsername,
+  getUserByUsernameWithPasswordHash,
   insertSession,
 } from '../../utilities/database';
 
@@ -13,7 +13,7 @@ export default async function handler(
   response: NextApiResponse,
 ) {
   const { username, password } = request.body;
-  const user = await getUserByUsername(username);
+  const user = await getUserByUsernameWithPasswordHash(username);
 
   if (typeof user === 'undefined') {
     // TODO: Return proper message from the server

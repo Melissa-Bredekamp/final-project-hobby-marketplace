@@ -9,6 +9,7 @@ import {
   UserWithDate,
   Message,
   HobbySnakeCase,
+  MessageSnakeCase,
 } from './types';
 
 import extractHerokuDatabaseEnvVars from './extractHerokuDatabaseEnvVars';
@@ -33,7 +34,16 @@ export async function registerUser(username: string, passwordHash: string) {
        (username, password_hash)
      VALUES
        (${username}, ${passwordHash})
-     RETURNING *;
+     RETURNING 
+     id,
+    username,
+    first_name,
+    last_name,
+    email,
+    date_of_birth,                                       
+    photo,  
+    city,    
+    interests ;
    `;
 
   return users.map((u) => camelcaseKeys(u))[0];
@@ -83,7 +93,8 @@ export async function getUserBySessionToken(token: string | undefined) {
       users.interests,
       users.date_of_birth,
       users.username,
-      users.city
+      users.city,
+      users.photo
     FROM
       users,
       sessions
@@ -116,6 +127,27 @@ export async function getHobbyBySessionToken(token: string | undefined) {
   `;
 
   return hobby.map((h) => camelcaseKeys(h))[0];
+}
+export async function getMessageBySessionToken(token: string | undefined) {
+  if (typeof token === 'undefined') return undefined;
+
+  const message = await sql<Message[]>`
+    SELECT
+      messages.message_id,
+      messages.conversation_id,
+      -- messages.sender_id,
+      messages.subject,
+      messages.text
+    FROM
+    users,
+      messages,
+      sessions
+    WHERE
+      sessions.token = ${token} AND
+      users.id = sessions.user_id;
+  `;
+
+  return message.map((m) => camelcaseKeys(m))[0];
 }
 
 export async function getHobby() {
@@ -153,18 +185,38 @@ export async function getHobbyById(hobbyId: string) {
 
 export async function getUsers() {
   const users = await sql`
-    SELECT * FROM users;
+    SELECT 
+    id,
+    username,
+    first_name,
+    last_name,
+    email,
+    date_of_birth,                                       
+    photo,  
+    city,    
+    interests  
+    FROM users;
   `;
   return users.map((u) => camelcaseKeys(u));
 }
 
-export async function getUserById(id: string) {
+export async function getUserById(id: string | undefined) {
   // Return undefined if the id is not
   // in the correct format
-  if (!/^\d+$/.test(id)) return undefined;
+  if (!id || /^\d+$/.test(id)) return undefined;
 
   const users = await sql<UserWithDate[]>`
-    SELECT * FROM users WHERE id = ${id};
+    SELECT 
+    id,
+    username,
+    first_name,
+    last_name,
+    email,
+    date_of_birth,                                       
+    photo,  
+    city,    
+    interests 
+    FROM users WHERE id = ${id};
   `;
 
   return users.map((u) => camelcaseKeys(u))[0];
@@ -178,9 +230,20 @@ export function userToReactProps(user: UserWithDate) {
   });
 }
 
-export async function getUserByUsername(username: string) {
+export async function getUserByUsernameWithPasswordHash(username: string) {
   const users = await sql<UserWithDate[]>`
-    SELECT * FROM users WHERE username = ${username};
+    SELECT 
+    id,
+    username,
+    password_hash,
+    first_name,
+    last_name,
+    email,
+    date_of_birth,                                       
+    photo,  
+    city,    
+    interests 
+  FROM users WHERE username = ${username};
   `;
 
   return users.map((u) => camelcaseKeys(u))[0];
@@ -205,13 +268,6 @@ export async function updateUserById(id: string, user: User) {
 
   const snakeKeysUser = snakeCaseKeys(user);
 
-  console.log(
-    'sql update values',
-    // sql(
-    //   snakeKeysUser,
-    ...Object.keys(user).filter((key) => allowedProperties.includes(key)),
-    // ),
-  );
   type AllowedPropertiesKeys =
     | 'username'
     | 'id'
@@ -228,7 +284,16 @@ export async function updateUserById(id: string, user: User) {
   ) as unknown) as AllowedPropertiesKeys[];
   users = await sql<User[]>`
     UPDATE users SET ${sql(snakeKeysUser, ...userAllowedProperties)}
-   WHERE id = ${id} RETURNING *;
+   WHERE id = ${id} RETURNING 
+   id,
+    username,
+    first_name,
+    last_name,
+    email,
+    date_of_birth,                                       
+    photo,  
+    city,    
+    interests ;
 `;
 
   return users.map((u) => camelcaseKeys(u))[0];
@@ -239,6 +304,7 @@ export async function insertHobby(userId: number, hobby: Hobby) {
     'user_id',
     'hobby_offer',
     'availability',
+    'hobby_photo',
     'about_me',
     'city',
   ];
@@ -255,11 +321,6 @@ export async function insertHobby(userId: number, hobby: Hobby) {
       (requiredKey) => !hobbyProperties.includes(requiredKey),
     )
   ) {
-    console.log(
-      'insertHobby error missing properties',
-      hobbyProperties,
-      requiredHobbyProperties,
-    );
     return undefined;
   }
   console.log('hobby2', snakeKeysHobby);
@@ -270,6 +331,7 @@ export async function insertHobby(userId: number, hobby: Hobby) {
     | 'hobby_id'
     | 'hobby_offer'
     | 'availability'
+    | 'hobby_photo'
     | 'about_me'
     | 'host_first_name'
     | 'host_last_name';
@@ -292,10 +354,33 @@ export async function deleteUserById(id: string) {
   const users = await sql<User[]>`
     DELETE FROM users
       WHERE id = ${id}
-      RETURNING *;
+      RETURNING 
+      id,
+    username,
+    first_name,
+    last_name,
+    email,
+    date_of_birth,                                       
+    photo,  
+    city,    
+    interests ;
   `;
 
   return users.map((u) => camelcaseKeys(u))[0];
+}
+
+export async function deleteHobbyById(hobbyId: string) {
+  // Return undefined if the id is not
+  // in the correct format
+  if (!/^\d+$/.test(hobbyId)) return undefined;
+
+  const hobby = await sql<Hobby[]>`
+    DELETE FROM hobby
+      WHERE hobby_id = ${hobbyId}
+      RETURNING *;
+  `;
+
+  return hobby.map((h) => camelcaseKeys(h))[0];
 }
 
 export async function getNewsfeedHobbyById() {
@@ -311,11 +396,11 @@ export async function getNewsfeedHobbyById() {
       hobby.availability
       FROM
       hobby,
-      users
-      -- hobby_photos
+      users,
+      hobby_photos
       WHERE users.id = hobby.user_id 
-      -- AND
-      -- hobby.hobby_id = hobby_photos.hobby_id
+      AND
+      hobby.hobby_id = hobby_photos.hobby_id
       ORDER BY
       hobby_id desc 
   `;
@@ -325,20 +410,15 @@ export async function getNewsfeedHobbyById() {
 }
 
 export async function insertMessage(userId: number, message: Message) {
-  const requiredMessageProperties = [
-    'user_id',
-    'message_id',
-    'sender_id',
-    'recipient_id',
-    'sent_date',
-    'subject',
-    'text',
-  ];
+  const requiredMessageProperties = ['sender_id', 'subject', 'text'];
 
-  const snakeKeysMessage: Message & { userId: number } = {
-    ...snakeCaseKeys(message),
-    userId: userId,
+  const snakeKeysMessage: MessageSnakeCase & { user_id: number } = {
+    ...snakeCaseKeys<MessageSnakeCase>(
+      (message as unknown) as MessageSnakeCase,
+    ),
+    // user_id: userId,
   };
+  console.log(snakeKeysMessage, 'snakeKeysMessage');
 
   const messageProperties = Object.keys(snakeKeysMessage);
 
@@ -352,35 +432,37 @@ export async function insertMessage(userId: number, message: Message) {
       messageProperties,
       requiredMessageProperties,
     );
+
     return undefined;
   }
   console.log('message2', snakeKeysMessage);
 
   type MessageRequiredPropertiesKey =
-    | 'userId'
     | 'messageId'
     | 'senderId'
-    | 'recipientId'
-    | 'sentDate'
     | 'subject'
     | 'text';
+  // | 'host_first_name'
+  // | 'host_last_name'
+  // | 'user_id';
   const messageRequiredProperties = (Object.keys(
     snakeKeysMessage,
   ).filter((key) =>
     requiredMessageProperties.includes(key),
   ) as unknown) as MessageRequiredPropertiesKey[];
-  const messages = await sql<Message[]>`
+  const newMessage = await sql<Message[]>`
       INSERT INTO messages ${sql(
         snakeKeysMessage,
         ...messageRequiredProperties,
       )}
       RETURNING *;
       `;
+  console.log(newMessage, 'newMessage');
 
-  return messages.map((m) => camelcaseKeys(m))[0];
+  return newMessage.map((m) => camelcaseKeys(m))[0];
 }
 
-export async function getMessages() {
+export async function getCoversationsByUserId(id) {
   const messages = await sql<Message[]>`
     SELECT
       users.id as host_id,
@@ -388,22 +470,22 @@ export async function getMessages() {
       users.last_name as host_last_name,
       messages.message_id,
       messages.sender_id,
-      threads.conversation_id,
-      threads.owner_id,
-      threads.remote_user_id,
-      messages.sent_date,
       messages.subject,
       messages.text
     FROM
     users,
-      messages,
-      threads
+      messages
+    
     WHERE
-      users.id = threads.remote_user_id AND threads.conversation_id = threads.conversation_id
+   ${id} = users.id 
+   AND
+   users.id = messages.sender_id
   `;
-  console.log(
-    'messages',
-    messages.map((m) => camelcaseKeys(m)),
-  );
+  // console.log(
+  //   'messages1',
+  //   messages.map((m) => camelcaseKeys(m)),
+  // );
+  console.log(messages, 'message123');
+
   return messages.map((m) => camelcaseKeys(m));
 }

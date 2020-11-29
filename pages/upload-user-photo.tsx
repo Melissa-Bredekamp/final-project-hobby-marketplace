@@ -1,8 +1,8 @@
 import { GetServerSidePropsContext } from 'next';
 import { useState, ChangeEvent } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../components/Layout';
-import { useRouter } from 'next/router';
 import nextCookies from 'next-cookies';
 import { User } from '../utilities/types';
 
@@ -12,7 +12,7 @@ type Props = {
   redirectDestination: string;
 };
 
-export default function hobbyUpload(props: Props) {
+export default function upload(props: Props) {
   const [photo, setPhoto] = useState<string | null>();
   const router = useRouter();
 
@@ -46,36 +46,21 @@ export default function hobbyUpload(props: Props) {
       </Head>
       <Layout>
         <form className="uploadPhotStyles">
-          <div className="createProfileContainer">
-            <h1>Upload Photo</h1>
+          <div>
+            <h1>Complete your Profile</h1>
             <input
               className="uploaderStyles"
               onChange={handleChange}
               accept=".png, .jpeg, .jpg"
               type="file"
             ></input>
-            {/* <Link
-              className="placeholderStyles"
-              href="//fonts.googleapis.com/css?family=Roboto:500,300,700,400italic,400"
-            >
-              <a>
-                <div class="profilePicContainer">
-                  <div class="pic">PIC</div>
-                  <br />
-                  <div class="name"> Username </div>
-                </div>
-              </a>
-            </Link> */}
-            {/* <ProfilePicUpLoader /> */}
 
             <br />
-            {/* <Link href="/profile">
-              <a> */}
+
             <div>
               <button
                 className="buttonStyles"
                 type="submit"
-                // disable={!photo}
                 onClick={async () => {
                   console.log(photo);
                   await fetch(`/api/users/${props.user.id}`, {
@@ -84,7 +69,7 @@ export default function hobbyUpload(props: Props) {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      user: { photo: photo },
+                      user: { photoFile: photo },
                     }),
                   });
                 }}
@@ -92,8 +77,6 @@ export default function hobbyUpload(props: Props) {
                 Add to Profile
               </button>
             </div>
-            {/* </a>
-            </Link> */}
           </div>
         </form>
       </Layout>

@@ -39,6 +39,50 @@ export default function SingleUser(props: Props) {
       <div className="formStyles">
         user id: {props.user.id}
         <br />
+        <br />
+        <h2>Photo</h2>
+        {editingKey === 'photo' ? (
+          <input
+            value={photo}
+            onChange={(event) => setPhoto(event.currentTarget.value)}
+          />
+        ) : (
+          photo
+        )}{' '}
+        {editingKey !== 'photo' ? (
+          <button
+            onClick={() => {
+              setEditingKey('photo');
+            }}
+          >
+            edit
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={async () => {
+                await fetch(`/api/users/${props.user.id}`, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ user: { photo: photo } }),
+                });
+                setEditingKey(null);
+              }}
+            >
+              save
+            </button>{' '}
+            <button
+              onClick={() => {
+                setEditingKey(null);
+                setPhoto(props.user.photo);
+              }}
+            >
+              cancel
+            </button>
+          </>
+        )}
         <h2>user firstName</h2>
         {editingKey === 'firstName' ? (
           <input
@@ -265,51 +309,6 @@ export default function SingleUser(props: Props) {
             </button>
           </>
         )}
-        {/* <br />
-      <h2>Photo</h2>
-      {editingKey === 'photo' ? (
-        <input
-          value={photo}
-          onChange={(event) => setPhoto(event.currentTarget.value)}
-        />
-      ) : (
-        photo
-      )}{' '}
-      {editingKey !== 'photo' ? (
-        <button
-          onClick={() => {
-            setEditingKey('photo');
-          }}
-        >
-          edit
-        </button>
-      ) : (
-        <>
-          <button
-            onClick={async () => {
-              await fetch(`/api/users/${props.user.id}`, {
-                method: 'PATCH',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ user: { photo: photo } }),
-              });
-              setEditingKey(null);
-
-            }}
-          >
-            save
-          </button>{' '}
-          <button
-            onClick={() => {
-              setEditingKey(null);
-              setPhoto(props.user.photo);
-            }}
-          >
-            cancel
-          </button>
-        </>
-      )} */}
         <br />
         <h2>Interests</h2>
         {editingKey === 'interests' ? (

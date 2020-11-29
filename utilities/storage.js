@@ -5,18 +5,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-export default async function photoUpload(photoFile) {
-  console.log(photoFile);
+export async function photoUpload(photoFile) {
+  // console.log(photoFile);
   const cloudinaryResponse = await cloudinary.uploader.upload_large(
-    data,
+    photoFile,
     // options,
-    async function (error, result) {
-      console.log('error', error);
-      if (error || !result || !result.secure_url) {
-        console.error('', error);
-        return response.status(500).send({ success: false });
+    function (error, result) {
+      if (error) {
+        console.error('photoUpload error', error);
       }
-      return photoURL;
     },
   );
+  if (!cloudinaryResponse || !cloudinaryResponse.secure_url) {
+    console.error('photoUpload sth went wrong, reponse:', cloudinaryResponse);
+    return '';
+  }
+  const photoURL = cloudinaryResponse.secure_url;
+  return photoURL;
 }

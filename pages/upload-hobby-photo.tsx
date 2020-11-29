@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import nextCookies from 'next-cookies';
 import { User } from '../utilities/types';
+import { isSessionTokenValid } from '../utilities/auth';
 
 type Props = {
   user: User;
@@ -12,7 +13,7 @@ type Props = {
   redirectDestination: string;
 };
 
-export default function upload(props: Props) {
+export default function hobbyUpload(props: Props) {
   const [hobbyPhoto, setHobbyPhoto] = useState<string | null>();
   const router = useRouter();
 
@@ -41,50 +42,35 @@ export default function upload(props: Props) {
   return (
     <div>
       <Head>
-        <title>Upload Profile Pic</title>
+        <title>Upload Hobby Pic</title>
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
         <form className="uploadPhotStyles">
-          <div className="createProfileContainer">
-            <h1>Upload Hobby Photo</h1>
+          <div>
+            <h1>Pimp your Hobby</h1>
             <input
               className="uploaderStyles"
               onChange={handleChange}
               accept=".png, .jpeg, .jpg"
               type="file"
             ></input>
-            {/* <Link
-              className="placeholderStyles"
-              href="//fonts.googleapis.com/css?family=Roboto:500,300,700,400italic,400"
-            >
-              <a>
-                <div class="profilePicContainer">
-                  <div class="pic">PIC</div>
-                  <br />
-                  <div class="name"> Username </div>
-                </div>
-              </a>
-            </Link> */}
-            {/* <ProfilePicUpLoader /> */}
 
             <br />
-            {/* <Link href="/profile">
-              <a> */}
+
             <div>
               <button
                 className="buttonStyles"
                 type="submit"
-                // disable={!hobbyPhoto}
                 onClick={async () => {
                   console.log(hobbyPhoto);
-                  await fetch(`/api/users/${props.user.id}`, {
+                  await fetch(`/api/photo-uploader`, {
                     method: 'PATCH',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      user: { hobbyPhoto: hobbyPhoto },
+                      user: { photoFile: hobbyPhoto },
                     }),
                   });
                 }}
@@ -92,8 +78,6 @@ export default function upload(props: Props) {
                 Add to Profile
               </button>
             </div>
-            {/* </a>
-            </Link> */}
           </div>
         </form>
       </Layout>
@@ -102,23 +86,19 @@ export default function upload(props: Props) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { getUserBySessionToken, userToReactProps } = await import(
-    '../utilities/database'
-  );
+  const { getHobbyBySessionToken } = await import('../utilities/database');
+
   const { session: token } = nextCookies(context);
 
-  const redirectDestination = '/additional-user-info';
-
-  const user = await getUserBySessionToken(token);
-  if (!user){
+  if (!isSessionTokenValid(token))
     return {
       redirect: {
-        destination: '/users/create-users',
+        destination: '/create-hobby',
         permanent: false,
       },
     };
-  }
-  const reactUser = userToReactProps(user);
-
-  return { props: { user: reactUser } };
+  const hobbies = await JSON.parse(
+    JSON.stringify(getHobbyBySessionToken(token)),
+  );
+  return { props: { hobbies } };
 }

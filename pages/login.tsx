@@ -59,7 +59,7 @@ export default function Login(props: Props) {
             </Link>
           </div>
           <div className="loginContainer">
-            <label htmlFor="uname">
+            <label htmlFor="username">
               <p>Username</p>
             </label>
             <input

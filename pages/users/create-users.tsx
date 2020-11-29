@@ -18,8 +18,6 @@ export default function newUser(props: Props) {
   const [dateOfBirth, setdateOfBirth] = useState('');
   const router = useRouter();
 
-  // console.log(props);
-  // if (props.user === user.id)
   return (
     <div>
       <Head>
