@@ -135,14 +135,16 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
                 </button>
               </>
             ) : (
-              <button
-                className="editButtonStyles"
-                onClick={() => {
-                  setEditingKey('photo');
-                }}
-              >
-                edit
-              </button>
+              <Link href="/upload-user-photo">
+                <button
+                  className="editButtonStyles"
+                  onClick={() => {
+                    setEditingKey('photo');
+                  }}
+                >
+                  edit
+                </button>
+              </Link>
             )}
             <br />
             <br />

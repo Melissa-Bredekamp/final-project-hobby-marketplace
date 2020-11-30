@@ -30,7 +30,6 @@ export default async function hobbyHandler(
     if (user) {
       const userId = user?.id;
       const hobby = await insertHobby(userId, newHobby);
-      console.log('request create hobby, db', hobby);
       response.send({
         hobby: hobby,
       });
