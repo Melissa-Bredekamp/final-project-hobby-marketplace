@@ -25,10 +25,9 @@ export default function NewHobby(props: Props) {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
-        <div className="pageStyles">
+        <div className="formStyles">
           <h1>Your hobby offer</h1>
           <form
-            className="createHobbyFormStyles"
             onSubmit={async (event) => {
               event.preventDefault();
               const response = await fetch('/api/hobby', {
@@ -37,19 +36,20 @@ export default function NewHobby(props: Props) {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  // hobbies: {
-                  id: props.hobbies.hobbyId,
-                  hobbyOffer: hobbyOffer,
-                  availability: availability,
-                  city: city,
-                  aboutMe: aboutMe,
-                  // },
+                  hobby: {
+                    id: props.hobbies.hobbyId,
+                    hobbyOffer: hobbyOffer,
+                    availability: availability,
+                    city: city,
+                    aboutMe: aboutMe,
+                  },
                 }),
               });
               const jsonResponse = await response.json();
-              console.log('jsonResponse', jsonResponse);
+              // console.log('jsonResponse', jsonResponse);
+              // console.log('response.json', response.json);
               const newHobby = jsonResponse.hobby;
-              console.log(newHobby);
+              // console.log(newHobby, 'newHobby123');
               window.location.href = `/hobby/${newHobby.hobbyId}`;
             }}
           >
@@ -105,7 +105,7 @@ export default function NewHobby(props: Props) {
             <br />
 
             <button
-              onClick={() => router.push('/upload-hobby-photo')}
+              onClick={async (e) => router.push('/upload-hobby-photo')}
               data-cy="new-user-hobby-button"
               className="centeredButtonStyles"
               type="submit"
@@ -129,8 +129,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         permanent: false,
       },
     };
+
   const hobbies = await JSON.parse(
     JSON.stringify(getHobbyBySessionToken(token)),
   );
+
   return { props: { hobbies } };
 }

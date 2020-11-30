@@ -5,6 +5,8 @@ import Head from 'next/head';
 import { isSessionTokenValid } from '../utilities/auth';
 import Layout from '../components/Layout';
 import { User } from '../utilities/types';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function Profile(props: { user: User; loggedIn: boolean }) {
   const [editingKey, setEditingKey] = useState<string | null>(null);
@@ -15,6 +17,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
   const [city, setCity] = useState(props.user?.city);
   const [photo, setPhoto] = useState(props.user.photo);
   const [interests, setInterests] = useState(props.user?.interests);
+  const router = useRouter();
 
   if (!props.user) {
     return (
@@ -35,50 +38,48 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
       </Head>
       <Layout>
         <div className="profileTextStyles">
-          <div className="pageStyles">
-            {editingKey !== 'name' ? (
+          <div className="formStyles">
+            <h2>
+              {firstName} {lastName}
+            </h2>
+            {/* {editingKey !== 'name' ? (
               <>
-                <h2>
-                  {firstName} {lastName}
-                </h2>
-
                 <input
                   value={firstName}
                   onChange={(event) => setFirstName(event.currentTarget.value)}
-               
+                />
+                <input
+                  value={lastName}
+                  onChange={(event) => setLastName(event.currentTarget.value)}
+                />
+                <button
+                  className="editButtonStyles"
+                  onClick={async () => {
+                    await fetch(`/api/users/${props.user.id}`, {
+                      method: 'PATCH',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        user: { firstName: firstName, lastName: lastName },
+                      }),
+                    });
+
+                    setEditingKey(null);
+                  }}
                 >
-                  <input
-                    value={lastName}
-                    onChange={(event) => setLastName(event.currentTarget.value)}
-                  /> 
-                  <button
-                    className="editButtonStyles"
-                    onClick={async () => {
-                      await fetch(`/api/users/${props.user.id}`, {
-                        method: 'PATCH',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          user: { firstName: firstName, lastName: lastName },
-                        }),
-                      });
-  
-                      setEditingKey(null);
-                    }}
-                    >
-                    save
-                  </button>
-                  <button
-                    className="editButtonStyles"
-                    onClick={() => {
-                      setEditingKey(null);
-                      setFirstName(props.user.firstName);
-                      setLastName(props.user.lastName);
-                    }}
-                  >
-                    cancel
-                  </button>
+                  save
+                </button>
+                <button
+                  className="editButtonStyles"
+                  onClick={() => {
+                    setEditingKey(null);
+                    setFirstName(props.user.firstName);
+                    setLastName(props.user.lastName);
+                  }}
+                >
+                  cancel
+                </button>
               </>
             ) : (
               <button
@@ -89,8 +90,15 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
               >
                 edit
               </button>
-            )}
+            )} */}
             <br />
+            <button
+              onClick={async (e) => router.push('/create-hobby')}
+              data-cy="new-user-form-button"
+              className="centeredButtonStyles"
+            >
+              Create hobby offer
+            </button>
             <br />
             <img className="imageStyles" src={props.user.photo} />
             {editingKey === 'photo' ? (
@@ -98,6 +106,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
                 <input
                   onChange={(event) => setPhoto(event.currentTarget.value)}
                 />
+                <br />
                 <button
                   className="editButtonStyles"
                   onClick={async () => {
@@ -133,6 +142,8 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
                 edit
               </button>
             )}
+            <br />
+            <br />
             <h3>{email}</h3>
             {editingKey === 'email' ? (
               <>
@@ -312,7 +323,7 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
             )}
             <br />
             <button
-              className="DeleteButtonStyles"
+              className="buttonStyles"
               onClick={async () => {
                 const answer = window.confirm(
                   `Really delete user ${props.user.lastName} ${props.user.lastName}?`,
@@ -329,6 +340,11 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
               delete user
             </button>
             <br />
+            <div>
+              <Link href="/logout">
+                <a>Log out</a>
+              </Link>
+            </div>
           </div>
         </div>
       </Layout>

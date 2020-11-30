@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   getHobby,
   insertHobby,
-  getUserBySessionToken,
+  getHobbyBySessionToken,
 } from '../../utilities/database';
 
 //
@@ -22,10 +22,10 @@ export default async function hobbyHandler(
     }
 
     const newHobby = request.body;
-    console.log(request.body);
+    console.log(request.body, 'response.body');
     const cookiesParsed = cookie.parse(request.headers.cookie);
     const sessionToken = cookiesParsed.session;
-    const user = await getUserBySessionToken(sessionToken);
+    const user = await getHobbyBySessionToken(sessionToken);
 
     if (user) {
       const userId = user?.id;
@@ -33,16 +33,16 @@ export default async function hobbyHandler(
       response.send({
         hobby: hobby,
       });
-      console.log(hobby);
+      console.log(hobby, 'hobby246');
     }
   }
 
   // response.send({
-  //   // Only add "hobbies" key to object if users exists
-  //   // (eg. GET request)
+  //Only add "hobbies" key to object if users exists
+  //(eg. GET request)
   //   ...(hobbies ? { hobbies: hobbies } : {}),
-  //   // Only add "hobby" key to object if user exists
-  //   // (eg. POST request)
+  //Only add "hobby" key to object if user exists
+  //(eg. POST request)
   //   ...(hobby ? { hobby: hobby } : {}),
   // });
 }

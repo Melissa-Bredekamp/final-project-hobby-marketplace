@@ -25,10 +25,9 @@ export default function newUser(props: Props) {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
-        <div className="pageStyles">
+        <div className="formStyles">
           <h1>Your Profile</h1>
           <form
-            className="formStyles"
             onSubmit={async (event) => {
               event.preventDefault();
               const response = await fetch('/api/users', {
@@ -92,7 +91,7 @@ export default function newUser(props: Props) {
             <br />
             <div>
               <button
-                onClick={() => router.push('/additional-user-info')}
+                onClick={async (e) => router.push('/additional-user-info')}
                 data-cy="new-user-form-button"
                 className="centeredButtonStyles"
               >

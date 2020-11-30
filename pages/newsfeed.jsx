@@ -5,8 +5,6 @@ import { isSessionTokenValid } from '../utilities/auth';
 import Link from 'next/link';
 
 export default function newsfeed(props) {
-  console.log(props.hobbies, 'props.hobbies');
-
   return (
     <div>
       <Head>
@@ -15,15 +13,15 @@ export default function newsfeed(props) {
       </Head>
       <Layout>
         <main>
-          <div className="newsfeedStyles">
+          <div className="newsfeedFormStyles">
             {props.hobbies.map((hobby) => (
-              // console.log(hobby.hobbyOffer.toUpperCase());
-
               <Link href={`/hobby/${hobby.hobbyId}`}>
-                <div key={hobby.hobbyId}>
-                  <h4>{hobby.hobbyOffer}</h4> 
+                <div className="newsfeedStyles" key={hobby.hobbyId}>
+                  <h4> {hobby.hobbyOffer}</h4> 
                   <div className="newsfeedFlexStyles">
-                    <span>image</span>
+                    <span>
+                      <img src={hobby.hobbyPhoto} />
+                    </span>
                     <div>
                       <p>{`${hobby.hostFirstName} ${hobby.hostLastName}`} </p>
                       <br />
@@ -32,13 +30,7 @@ export default function newsfeed(props) {
                       <p>{hobby.availability}</p>
                     </div>
                   </div>
-                  <div
-                    style={{
-                      padding: 10,
-                      marginHorizontal: 10,
-                      backgroundColor: '#f9f1f1',
-                    }}
-                  ></div>
+                  <div></div>
                 </div>
               </Link>
             ))}

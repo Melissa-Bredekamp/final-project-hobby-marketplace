@@ -26,10 +26,9 @@ export default function AdditionalUserInfo(props: Props) {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
-        <div className="pageStyles">
+        <div className="formStyles">
           <h1>You're almost there!</h1>
           <form
-            className="formStyles"
             onSubmit={async (event) => {
               event.preventDefault();
               const response = await fetch('/api/users', {
@@ -91,7 +90,7 @@ export default function AdditionalUserInfo(props: Props) {
               <br />
 
               <button
-                onClick={() => router.push('/upload-user-photo')}
+                onClick={async (e) => router.push('/upload-user-photo')}
                 data-cy="new-user-form-button"
                 className="centeredButtonStyles"
                 type="submit"

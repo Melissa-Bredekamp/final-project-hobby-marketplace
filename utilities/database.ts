@@ -178,8 +178,6 @@ export async function getHobbyById(hobbyId: string) {
       hobby_id = ${parseInt(hobbyId)}
   `;
 
-  // console.log('hobby', hobby.map((h) => camelcaseKeys(h))[0]);
-
   return hobby.map((h) => camelcaseKeys(h))[0];
 }
 
@@ -201,8 +199,6 @@ export async function getUsers() {
 }
 
 export async function getUserById(id: string | undefined) {
-  // Return undefined if the id is not
-  // in the correct format
   if (!id || /^\d+$/.test(id)) return undefined;
 
   const users = await sql<UserWithDate[]>`
@@ -250,9 +246,6 @@ export async function getUserByUsernameWithPasswordHash(username: string) {
 }
 
 export async function updateUserById(id: string, user: User) {
-  console.log('updateUserById', id, user);
-  // Return undefined if the id is not
-  // in the correct format
   if (!/^\d+$/.test(id)) return undefined;
 
   const allowedProperties = [
@@ -321,9 +314,13 @@ export async function insertHobby(userId: number, hobby: Hobby) {
       (requiredKey) => !hobbyProperties.includes(requiredKey),
     )
   ) {
+    console.log(
+      'insertHobby error missing properties',
+      hobbyProperties,
+      requiredHobbyProperties,
+    );
     return undefined;
   }
-  console.log('hobby2', snakeKeysHobby);
 
   type HobbyRequiredPropertiesKey =
     | 'city'
@@ -332,9 +329,9 @@ export async function insertHobby(userId: number, hobby: Hobby) {
     | 'hobby_offer'
     | 'availability'
     | 'hobby_photo'
-    | 'about_me'
-    | 'host_first_name'
-    | 'host_last_name';
+    | 'about_me';
+  // | 'host_first_name'
+  // | 'host_last_name';
   const hobbyRequiredProperties = (Object.keys(snakeKeysHobby).filter((key) =>
     requiredHobbyProperties.includes(key),
   ) as unknown) as HobbyRequiredPropertiesKey[];
@@ -342,13 +339,11 @@ export async function insertHobby(userId: number, hobby: Hobby) {
       INSERT INTO hobby ${sql(snakeKeysHobby, ...hobbyRequiredProperties)}
       RETURNING *;
       `;
-  console.log(newHobby, 'newHobby');
+  console.log(newHobby, 'newHobby987');
   return newHobby.map((h) => camelcaseKeys(h))[0];
 }
 
 export async function deleteUserById(id: string) {
-  // Return undefined if the id is not
-  // in the correct format
   if (!/^\d+$/.test(id)) return undefined;
 
   const users = await sql<User[]>`
@@ -396,16 +391,13 @@ export async function getNewsfeedHobbyById() {
       hobby.availability
       FROM
       hobby,
-      users,
-      hobby_photos
-      WHERE users.id = hobby.user_id 
-      AND
-      hobby.hobby_id = hobby_photos.hobby_id
+      users
+      WHERE 
+      users.id = hobby.user_id 
       ORDER BY
       hobby_id desc 
   `;
-  console.log('hobby', hobby.map((h) => camelcaseKeys(h))[0]);
-
+  console.log(hobby, 'hobby123');
   return hobby.map((h) => camelcaseKeys(h));
 }
 
@@ -416,7 +408,7 @@ export async function insertMessage(userId: number, message: Message) {
     ...snakeCaseKeys<MessageSnakeCase>(
       (message as unknown) as MessageSnakeCase,
     ),
-    // user_id: userId,
+    user_id: userId,
   };
   console.log(snakeKeysMessage, 'snakeKeysMessage');
 
@@ -462,7 +454,7 @@ export async function insertMessage(userId: number, message: Message) {
   return newMessage.map((m) => camelcaseKeys(m))[0];
 }
 
-export async function getCoversationsByUserId(id) {
+export async function getCoversationsByUserId(id: number) {
   const messages = await sql<Message[]>`
     SELECT
       users.id as host_id,
@@ -481,11 +473,6 @@ export async function getCoversationsByUserId(id) {
    AND
    users.id = messages.sender_id
   `;
-  // console.log(
-  //   'messages1',
-  //   messages.map((m) => camelcaseKeys(m)),
-  // );
-  console.log(messages, 'message123');
 
   return messages.map((m) => camelcaseKeys(m));
 }

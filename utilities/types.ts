@@ -11,18 +11,53 @@ export type User = {
   email: string;
 };
 
+export type UserWithDate = {
+  id: number;
+  passwordHash: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  city: string;
+  interests: string;
+  photo: string;
+  email: string;
+  messages: string;
+};
+
+export type Message = {
+  senderId: number;
+  subject: string;
+  text: string;
+  hostFirstName: string;
+  hostLastName: string;
+  id: number;
+  passwordHash: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  city: string;
+  interests: string;
+  photo: string;
+  email: string;
+  messages: string;
+};
+
 export type Hobby = {
+  id: number;
   hobbyId: number;
   hobbyOffer: string;
   city: string;
   availability: string[];
-  hobbPhoto: string;
+  hobbyPhoto: string;
   aboutMe: string;
   hostFirstName: string;
   hostLastName: string;
 };
 
 export type HobbySnakeCase = {
+  userId: number;
   hobby_id: number;
   hobby_offer: string;
   city: string;
@@ -40,30 +75,9 @@ export type Session = {
   userId: number;
 };
 
-export type UserWithDate = {
-  id: number;
-  passwordHash: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: Date;
-  city: string;
-  interests: string;
-  photo: string;
-  email: string;
-};
-
 export type MessageSnakeCase = {
   messageId: number;
   senderId: string;
-  subject: string;
-  text: string;
-  host_first_name: string;
-  host_last_name: string;
-};
-
-export type Message = {
-  senderId: number;
   subject: string;
   text: string;
   host_first_name: string;

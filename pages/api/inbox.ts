@@ -8,7 +8,6 @@ export default async function messageHandler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  console.log(request.body);
   let messages;
   let message;
   if (request.method === 'GET') {

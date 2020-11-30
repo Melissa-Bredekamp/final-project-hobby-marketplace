@@ -3,26 +3,16 @@ import { useRouter } from 'next/router';
 import nextCookies from 'next-cookies';
 import Head from 'next/head';
 import Layout from '../components/Layout';
-import { isSessionTokenValid } from '../utilities/auth';
 import { NextPageContext } from 'next';
 import { UserWithDate, Message } from '../utilities/types';
 import { getUserBySessionToken } from '../utilities/database';
 
-type Props = {
-  user: UserWithDate;
-  messages: Message[] | Message;
-};
+// type Props = {
+//   user: UserWithDate;
+//   messages: Message[];
+// };
 
-export default function inbox(props: Props) {
-  // id: 5,
-  // firstName: null,
-  // lastName: null,
-  // email: null,
-  // interests: null,
-  // dateOfBirth: null,
-  // username: 'test4',
-  // city: null,
-  // photo: null
+export default function inbox(props) {
   const [users, setUsers] = useState(props.user.id);
   const [subject, setSubject] = useState('');
   const [text, setText] = useState('');
@@ -41,13 +31,10 @@ export default function inbox(props: Props) {
               <h1>Inbox</h1>
 
               {props.messages.map((message) => {
-                // if (message.includes(props.user.id)) {
-                //   const newMessage = message.push;
-                // }
                 return (
-                  <div className="emailFormStyles">
+                  <div className="messagesStyles">
                     <div key={props.user.id}>
-                      <h4>{`${message.firstName} ${message.lastName}`}</h4>
+                      <h4>{`${message.hostFirstName} ${message.hostLastName}`}</h4>
                       <h4>{message.subject}</h4>
                       <p>{message.text}</p>
                     </div>
@@ -79,18 +66,6 @@ export default function inbox(props: Props) {
             }}
           >
             <div className="emailFormStyles">
-              {/* <h2>Message</h2>
-              <h4>subject</h4> */}
-              {/* <label htmlFor="subject">
-                <h4>Subject</h4>
-              </label>
-              <input
-                value={subject}
-                onChange={(e) => setSubject(e.currentTarget.value)}
-                type="text"
-                placeholder="Subject"
-                name="subjecct"
-              /> */}
               <textarea
                 className="emailInputStyles"
                 value={text}
@@ -109,18 +84,20 @@ export default function inbox(props: Props) {
   );
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  console.log(context.query, 'contect.quesry');
+export async function getServerSideProps(context) {
+  // console.log(context, 'context.query');
   const id = context.query.id?.toString();
+  const idNumber = context.query.id;
   const { session: token } = nextCookies(context);
-  const user = await getUserBySessionToken(token);
+  let user = await getUserBySessionToken(token);
   const { getCoversationsByUserId, userToReactProps } = await import(
     '../utilities/database'
   );
   //getCoversationByUserId
-  console.log(id);
-  const messages = await getCoversationsByUserId(user.id);
-  if (!messages) {
+  console.log(idNumber);
+  console.log(user);
+  let messages = await getCoversationsByUserId(user.id);
+  if (!user) {
     return {
       redirect: {
         destination: '/users/create-users',
@@ -128,14 +105,14 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
-  console.log(messages, 'user127');
-  const reactUser = userToReactProps(messages);
 
-  const props: { user?: UserWithDate; messages?: Message[] } = {};
-  if (messages) props.user = reactUser;
-  if (messages) props.messages = messages;
+  const reactUser = await userToReactProps(user);
+  console.log(messages, 'messages');
 
-  console.log(user, 'user');
+  // const props: { user?: UserWithDate; messages?: Message[] } = {};
+  if (messages) user = reactUser;
+  if (messages) messages = messages;
+
   return {
     props: { user: user, messages: messages },
   };

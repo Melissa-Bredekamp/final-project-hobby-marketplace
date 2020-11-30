@@ -5,7 +5,6 @@ import Head from 'next/head';
 import Layout from '../../components/Layout';
 import { isSessionTokenValid } from '../../utilities/auth';
 import { Hobby } from '../../utilities/types';
-import Link from 'next/link';
 
 type Props = {
   hobbies: Hobby;
@@ -21,10 +20,14 @@ export default function hobby(props: { hobbies: Hobby }) {
       </Head>
       <Layout>
         <main>
-          <div className="hobbyStyles">
+          <div className="formStyles">
             <h2>{props.hobbies.hobbyOffer}</h2>
             <div className="newsfeedFlexStyles">
               <span>image</span>
+              <img
+                className="hobbyImageStyles"
+                src={props.hobbies.hobbyPhoto}
+              />
               <div>
                 <p>{`${props.hobbies.hostFirstName} ${props.hobbies.hostLastName}`}</p>
 
@@ -38,14 +41,15 @@ export default function hobby(props: { hobbies: Hobby }) {
             </div>
             <div>
               <button
-                onClick={() => router.push('/inbox')}
+                onClick={async (e) => router.push('/inbox')}
                 className="contactButtonStyles"
                 type="submit"
               >
                 Contact me
               </button>
-              <button
-                className="DeleteButtonStyles"
+              <br />
+              {/* <button
+                className="buttonStyles"
                 onClick={async () => {
                   const answer = window.confirm(
                     `Really delete user ${props.hobbies.hobbyOffer}?`,
@@ -59,13 +63,8 @@ export default function hobby(props: { hobbies: Hobby }) {
                   }
                 }}
               >
-                delete user
-              </button>
-              <div>
-                <Link href="/logout">
-                  <a>Log out</a>
-                </Link>
-              </div>
+                Delete hobby
+              </button> */}
             </div>
           </div>
         </main>

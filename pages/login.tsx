@@ -21,75 +21,75 @@ export default function Login(props: Props) {
         <title>Login</title>
         <link rel="icon" href="/favicon.svg" />
       </Head>
+      <div className="registerFormStyles">
+        <h2>Login</h2>
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
 
-      <h2>Login</h2>
-      <form
-        className="formStyles"
-        onSubmit={async (e) => {
-          e.preventDefault();
+            const response = await fetch('/api/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, password }),
+            });
 
-          const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-          });
+            const { success } = await response.json();
 
-          const { success } = await response.json();
+            if (!success) {
+              setErrorMessage('Login failed!');
+            } else {
+              setErrorMessage('');
+              router.push(props.redirectDestination);
+            }
+          }}
+        >
+          <div>
+            <div className="LogoCenterStyles">
+              <Link href="/">
+                <a>
+                  <img
+                    className="lPLogoStyles"
+                    src="/hobbyMarketPlaceLogo.svg"
+                    alt="Logo"
+                  />
+                </a>
+              </Link>
+            </div>
+            <div className="loginContainer">
+              <label htmlFor="username">
+                <p>Username</p>
+              </label>
+              <input
+                value={username}
+                onChange={(e) => setUsername(e.currentTarget.value)}
+                type="text"
+                placeholder="Enter Username"
+                name="username"
+                required
+              />
+              <label htmlFor="password">
+                <p>Password</p>
+              </label>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.currentTarget.value)}
+                type="password"
+                placeholder="Enter Password"
+                name="password"
+                required
+              />
+              <br />
 
-          if (!success) {
-            setErrorMessage('Login failed!');
-          } else {
-            setErrorMessage('');
-            router.push(props.redirectDestination);
-          }
-        }}
-      >
-        <div>
-          <div className="LogoCenterStyles">
-            <Link href="/">
-              <a>
-                <img
-                  className="lPLogoStyles"
-                  src="/hobbyMarketPlaceLogo.svg"
-                  alt="Logo"
-                />
-              </a>
-            </Link>
+              <button className="buttonStyles" type="submit">
+                Log in
+              </button>
+            </div>
           </div>
-          <div className="loginContainer">
-            <label htmlFor="username">
-              <p>Username</p>
-            </label>
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.currentTarget.value)}
-              type="text"
-              placeholder="Enter Username"
-              name="username"
-              required
-            />
-            <label htmlFor="password">
-              <p>Password</p>
-            </label>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              type="password"
-              placeholder="Enter Password"
-              name="password"
-              required
-            />
-            <br />
-
-            <button className="buttonStyles" type="submit">
-              Log in
-            </button>
-          </div>
-        </div>
-      </form>
-      <p style={{ color: 'red' }}>{errorMessage}</p>
+        </form>
+        <p style={{ color: 'red' }}>{errorMessage}</p>
+      </div>
     </div>
   );
 }
