@@ -46,7 +46,7 @@ export default function newUser(props: Props) {
               });
               const jsonResponse = await response.json();
               const newUser = jsonResponse.user;
-              window.location.href = `/users/${newUser.id}`;
+              router.push('/additional-user-info');
             }}
           >
             <label>
@@ -91,7 +91,6 @@ export default function newUser(props: Props) {
             <br />
             <div>
               <button
-                onClick={async (e) => router.push('/additional-user-info')}
                 data-cy="new-user-form-button"
                 className="centeredButtonStyles"
               >

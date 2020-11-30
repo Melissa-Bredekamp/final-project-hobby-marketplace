@@ -7,11 +7,6 @@ import { NextPageContext } from 'next';
 import { UserWithDate, Message } from '../utilities/types';
 import { getUserBySessionToken } from '../utilities/database';
 
-// type Props = {
-//   user: UserWithDate;
-//   messages: Message[];
-// };
-
 export default function inbox(props) {
   const [users, setUsers] = useState(props.user.id);
   const [subject, setSubject] = useState('');
@@ -85,7 +80,6 @@ export default function inbox(props) {
 }
 
 export async function getServerSideProps(context) {
-  // console.log(context, 'context.query');
   const id = context.query.id?.toString();
   const idNumber = context.query.id;
   const { session: token } = nextCookies(context);
@@ -93,9 +87,7 @@ export async function getServerSideProps(context) {
   const { getCoversationsByUserId, userToReactProps } = await import(
     '../utilities/database'
   );
-  //getCoversationByUserId
-  console.log(idNumber);
-  console.log(user);
+
   let messages = await getCoversationsByUserId(user.id);
   if (!user) {
     return {
@@ -107,9 +99,7 @@ export async function getServerSideProps(context) {
   }
 
   const reactUser = await userToReactProps(user);
-  console.log(messages, 'messages');
 
-  // const props: { user?: UserWithDate; messages?: Message[] } = {};
   if (messages) user = reactUser;
   if (messages) messages = messages;
 

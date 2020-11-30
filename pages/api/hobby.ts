@@ -21,7 +21,7 @@ export default async function hobbyHandler(
       return response.status(401).send({ success: false });
     }
 
-    const newHobby = request.body;
+    const newHobby = request.body.hobby;
     console.log(request.body, 'response.body');
     const cookiesParsed = cookie.parse(request.headers.cookie);
     const sessionToken = cookiesParsed.session;
@@ -33,7 +33,6 @@ export default async function hobbyHandler(
       response.send({
         hobby: hobby,
       });
-      console.log(hobby, 'hobby246');
     }
   }
 

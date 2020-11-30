@@ -61,7 +61,8 @@ export default function upload(props: Props) {
               <button
                 className="buttonStyles"
                 type="submit"
-                onClick={async () => {
+                onClick={async (event) => {
+                  event.preventDefault();
                   console.log(photo);
                   await fetch(`/api/users/${props.user.id}`, {
                     method: 'PATCH',
@@ -72,6 +73,7 @@ export default function upload(props: Props) {
                       user: { photoFile: photo },
                     }),
                   });
+                  router.push('/profile');
                 }}
               >
                 Add to Profile

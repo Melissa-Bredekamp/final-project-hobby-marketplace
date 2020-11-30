@@ -46,10 +46,9 @@ export default function NewHobby(props: Props) {
                 }),
               });
               const jsonResponse = await response.json();
-              // console.log('jsonResponse', jsonResponse);
-              // console.log('response.json', response.json);
+
               const newHobby = jsonResponse.hobby;
-              // console.log(newHobby, 'newHobby123');
+
               window.location.href = `/hobby/${newHobby.hobbyId}`;
             }}
           >
@@ -92,7 +91,7 @@ export default function NewHobby(props: Props) {
             </label>
             <br />
             <label>
-              <p>aboutMe</p>
+              <p>about me</p>
               <input
                 data-cy="new-hobby-about-me-input"
                 type="text"

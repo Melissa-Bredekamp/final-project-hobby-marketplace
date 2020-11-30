@@ -297,7 +297,7 @@ export async function insertHobby(userId: number, hobby: Hobby) {
     'user_id',
     'hobby_offer',
     'availability',
-    'hobby_photo',
+    // 'hobby_photo',
     'about_me',
     'city',
   ];
@@ -328,7 +328,7 @@ export async function insertHobby(userId: number, hobby: Hobby) {
     | 'hobby_id'
     | 'hobby_offer'
     | 'availability'
-    | 'hobby_photo'
+    // | 'hobby_photo'
     | 'about_me';
   // | 'host_first_name'
   // | 'host_last_name';

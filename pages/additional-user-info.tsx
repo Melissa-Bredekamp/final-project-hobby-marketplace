@@ -47,7 +47,7 @@ export default function AdditionalUserInfo(props: Props) {
               });
               const jsonResponse = await response.json();
               const newUser = jsonResponse.user;
-              window.location.href = `/users/${newUser.id}`;
+              router.push('/upload-user-photo');
             }}
           >
             <div className="createProfileContainer">
@@ -90,7 +90,6 @@ export default function AdditionalUserInfo(props: Props) {
               <br />
 
               <button
-                onClick={async (e) => router.push('/upload-user-photo')}
                 data-cy="new-user-form-button"
                 className="centeredButtonStyles"
                 type="submit"
