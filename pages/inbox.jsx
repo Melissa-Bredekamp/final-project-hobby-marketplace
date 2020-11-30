@@ -14,14 +14,14 @@ export default function inbox(props) {
   const router = useRouter();
   console.log(props);
   return (
-    <div>
+    <div className="formStyles">
       <Head>
         <title>Inbox</title>
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Layout>
         <main>
-          <div className="formStyles">
+          <div>
             <div className="messageFormStyles">
               <h1>Inbox</h1>
 
