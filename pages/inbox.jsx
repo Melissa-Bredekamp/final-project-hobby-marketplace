@@ -21,7 +21,7 @@ export default function inbox(props) {
       </Head>
       <Layout>
         <main>
-          <div>
+          <div className="formStyles">
             <div className="messageFormStyles">
               <h1>Inbox</h1>
 
