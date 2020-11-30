@@ -14,7 +14,6 @@ export default function Header() {
           </a>
         </Link>
       </div>
-      {/* <div className="headerStyles">Hobby Marketplace</div> */}
     </div>
   );
 }

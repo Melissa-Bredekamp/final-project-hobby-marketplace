@@ -16,14 +16,12 @@ export default async function handler(
   const user = await getUserByUsernameWithPasswordHash(username);
 
   if (typeof user === 'undefined') {
-    // TODO: Return proper message from the server
     return response.status(401).send({ success: false });
   }
 
   const passwordVerified = await argon2.verify(user.passwordHash, password);
 
   if (!passwordVerified) {
-    // TODO: Return proper message from the server
     return response.status(401).send({ success: false });
   }
   // The session token represents the correct authentication

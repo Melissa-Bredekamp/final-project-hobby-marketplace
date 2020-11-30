@@ -11,13 +11,9 @@ export default async function hobbyHandler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  // console.log('getHobbyById', request.method, request.body);
   if (request.method === 'GET') {
-    // rewrite this code when needed
-    // hobby = await getHobby();
   } else if (request.method === 'POST') {
     if (!request.headers.cookie) {
-      // TODO: Return proper message from the server
       return response.status(401).send({ success: false });
     }
 
@@ -37,13 +33,4 @@ export default async function hobbyHandler(
       console.log('request user not found', user, sessionToken);
     }
   }
-
-  // response.send({
-  //Only add "hobbies" key to object if users exists
-  //(eg. GET request)
-  //   ...(hobbies ? { hobbies: hobbies } : {}),
-  //Only add "hobby" key to object if user exists
-  //(eg. POST request)
-  //   ...(hobby ? { hobby: hobby } : {}),
-  // });
 }
