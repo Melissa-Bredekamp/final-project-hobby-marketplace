@@ -22,12 +22,13 @@ export default function hobby(props: { hobbies: Hobby }) {
         <main>
           <div className="formStyles">
             <h2>{props.hobbies.hobbyOffer}</h2>
-            <div className="newsfeedFlexStyles">
-              <span>image</span>
+            <div>
+              {/* <span>image</span>
               <img
                 className="hobbyImageStyles"
                 src={props.hobbies.hobbyPhoto}
-              />
+              /> */}
+
               <div>
                 <p>{`${props.hobbies.hostFirstName} ${props.hobbies.hostLastName}`}</p>
 
