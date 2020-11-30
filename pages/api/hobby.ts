@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   getHobby,
   insertHobby,
-  getHobbyBySessionToken,
+  getUserBySessionToken,
 } from '../../utilities/database';
 
 //
@@ -25,7 +25,7 @@ export default async function hobbyHandler(
     console.log(request.body, 'response.body');
     const cookiesParsed = cookie.parse(request.headers.cookie);
     const sessionToken = cookiesParsed.session;
-    const user = await getHobbyBySessionToken(sessionToken);
+    const user = await getUserBySessionToken(sessionToken);
 
     if (user) {
       const userId = user?.id;
