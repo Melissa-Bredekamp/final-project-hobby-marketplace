@@ -104,7 +104,6 @@ export default function NewHobby(props: Props) {
             <br />
 
             <button
-              onClick={async (e) => router.push('/upload-hobby-photo')}
               data-cy="new-user-hobby-button"
               className="centeredButtonStyles"
               type="submit"

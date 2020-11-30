@@ -100,7 +100,9 @@ export default function Profile(props: { user: User; loggedIn: boolean }) {
               Create hobby offer
             </button>
             <br />
-            <img className="imageStyles" src={props.user.photo} />
+            <div>
+              <img className="imageStyles" src={props.user.photo} />
+            </div>
             {editingKey === 'photo' ? (
               <>
                 <input
