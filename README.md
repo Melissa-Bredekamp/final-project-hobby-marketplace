@@ -1,30 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## HOBBY MARKETPLACE
+The Hobby Marketplace App will provide users with a platform to create hobby offers and browse options they would like to learn, in the hobby marketplace.
 
-## Getting Started
+## Description
+ This is a social market place where where user can share their hobby skills with other users.Users are able to make hobby offers eg: teaching English; teaching yoga, etc in their free time and respectively, allow other users to browse and accept offers. User decide on the conditions of their hobby offer.
 
-First, run the development server:
+## App Features
+- Users can create an account.
+- Users can log into these accounts.
+  - Authorization page contains:
+    - Sign in form
+    - Registration form
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+- Users can create a user profile.
+  - User  profile includes: 
+     - name 
+     - DoB (for security reasons) 
+     - profile picture 
+     - city 
+     - email
+     - interests
+    
+- Users can create an offer to share a hobby.
+  - Hobby offer profile includes:
+    - name 
+    - hobby offer
+    - city 
+    - About me
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Users can update user profile.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- Logged in users can access the marketplace.
 
-## Learn More
+- Logged in user can send a direct message to the user making an offer in order to clarify details.
 
-To learn more about Next.js, take a look at the following resources:
+## Future features
+ - Messenger with notification
+ - public proile page
+ - User following
+ - search specific hobbies
+ - search specific cities
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies and Services
+- Next.js
+- CSS
+- Next.js API Routes
+- PostgreSQL 
+- Typescript
+- Heroku
+- Cloudinary
+- Cypress
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+<img width="927" alt="Screenshot 2020-11-25 at 19 10 34" src="https://user-images.githubusercontent.com/70283127/100724044-bfd4d300-33c2-11eb-8f87-e0b9dd7777d3.png">
+<img width="384" alt="Screenshot 2020-12-01 at 10 43 20" src="https://user-images.githubusercontent.com/70283127/100724091-c8c5a480-33c2-11eb-91d9-4875d53c4d77.png">
+<img width="384" alt="Screenshot 2020-12-01 at 10 43 38" src="https://user-images.githubusercontent.com/70283127/100724115-cfecb280-33c2-11eb-943e-45883dd894f1.png">
+<img width="384" alt="Screenshot 2020-12-01 at 10 43 48" src="https://user-images.githubusercontent.com/70283127/100724117-d1b67600-33c2-11eb-9e45-056dd2c28412.png">
+<img width="384" alt="Screenshot 2020-12-01 at 10 44 52" src="https://user-images.githubusercontent.com/70283127/100724119-d2e7a300-33c2-11eb-89a6-fb237900501e.png">
+<img width="1438" alt="Screenshot 2020-11-08 at 16 17 56" src="https://user-images.githubusercontent.com/70283127/100724449-2eb22c00-33c3-11eb-9442-db669afbadc1.png">
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+        
+
+             
